@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.*?>
+<?import io.github.palexdev.mfxresources.fonts.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import java.net.*?>
+<?import com.github.vtramo.turingmachine.ui.CodeAreaYaml?>
+<?import com.github.vtramo.turingmachine.ui.ConfigurationListView?>
+<?import com.github.vtramo.turingmachine.ui.TuringMachineCompilerView?>
+<Tab fx:id="tab" text="Left" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+    <AnchorPane minHeight="0.0" minWidth="0.0">
+        <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <AnchorPane fx:id="masterAnchorPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
+                <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="ALWAYS" maxWidth="80.0" minWidth="80.0" prefWidth="80.0" />
+                        <ColumnConstraints hgrow="ALWAYS" maxWidth="80.0" minWidth="80.0" prefWidth="80.0" />
+                        <ColumnConstraints hgrow="ALWAYS" maxWidth="80.0" minWidth="80.0" prefWidth="80.0" />
+                        <ColumnConstraints hgrow="ALWAYS" maxWidth="80.0" minWidth="80.0" prefWidth="80.0" />
+                        <ColumnConstraints hgrow="ALWAYS" maxWidth="80.0" minWidth="80.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="ALWAYS" maxWidth="80.0" minWidth="80.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="ALWAYS" maxWidth="80.0" minWidth="80.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="ALWAYS" maxWidth="80.0" minWidth="80.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="ALWAYS" maxWidth="80.0" minWidth="80.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="ALWAYS" maxWidth="80.0" minWidth="80.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="ALWAYS" maxWidth="80.0" minWidth="80.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="ALWAYS" maxWidth="80.0" minWidth="80.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="ALWAYS" maxWidth="80.0" minWidth="80.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="ALWAYS" maxWidth="80.0" minWidth="80.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="ALWAYS" maxWidth="80.0" minWidth="80.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="ALWAYS" maxWidth="80.0" minWidth="80.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="ALWAYS" maxWidth="80.0" minWidth="80.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="ALWAYS" maxWidth="80.0" minWidth="80.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <HBox GridPane.columnSpan="18" GridPane.hgrow="ALWAYS" GridPane.rowSpan="2147483647" GridPane.vgrow="ALWAYS">
+                        <GridPane styleClass="grid-pane" HBox.hgrow="ALWAYS">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+                                <RowConstraints maxHeight="125.0" minHeight="125.0" prefHeight="125.0" vgrow="NEVER" />
+                                <RowConstraints maxHeight="125.0" minHeight="125.0" prefHeight="125.0" vgrow="NEVER" />
+                            </rowConstraints>
+                            <HBox alignment="CENTER" spacing="200.0" GridPane.columnSpan="2147483647">
+                                <padding>
+                                    <Insets top="5.0" />
+                                </padding>
+                            </HBox>
+                            <AnchorPane GridPane.columnSpan="2147483647" GridPane.rowIndex="1" GridPane.rowSpan="9" GridPane.vgrow="NEVER">
+                                <MFXScrollPane fx:id="tapesScrollPane" fitToWidth="true" style="-fx-background-color: transparent;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <VBox fx:id="tapesVBox" alignment="CENTER" maxHeight="Infinity" maxWidth="1.7976931348623157E308" spacing="10">
+                                    </VBox>
+                                </MFXScrollPane>
+                            </AnchorPane>
+                            <AnchorPane GridPane.columnSpan="2147483647" GridPane.hgrow="ALWAYS" GridPane.rowIndex="10" GridPane.rowSpan="2">
+                                <GridPane alignment="CENTER" minHeight="150.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints maxHeight="60.0" minHeight="30.0" prefHeight="30.0" valignment="CENTER" vgrow="ALWAYS" />
+                                        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" valignment="CENTER" vgrow="ALWAYS" />
+                                        <RowConstraints minHeight="30.0" prefHeight="30.0" valignment="CENTER" vgrow="ALWAYS" />
+                                        <RowConstraints minHeight="30.0" prefHeight="30.0" valignment="CENTER" vgrow="ALWAYS" />
+                                        <RowConstraints minHeight="30.0" prefHeight="30.0" valignment="CENTER" vgrow="ALWAYS" />
+                                    </rowConstraints>
+                                    <stylesheets>
+                                        <URL value="@css/Buttons.css" />
+                                        <URL value="@css/ChecksRadiosToggles.css" />
+                                        <URL value="@css/Sliders.css" />
+                                        <URL value="@css/TextFields.css" />
+                                        <URL value="@css/ListViews.css" />
+                                    </stylesheets>
+                                    <GridPane GridPane.columnIndex="11" GridPane.columnSpan="2147483647" GridPane.rowSpan="2147483647">
+                                        <columnConstraints>
+                                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                            <ColumnConstraints />
+                                            <ColumnConstraints />
+                                            <ColumnConstraints />
+                                            <ColumnConstraints />
+                                            <ColumnConstraints />
+                                            <ColumnConstraints />
+                                            <ColumnConstraints />
+                                            <ColumnConstraints />
+                                            <ColumnConstraints />
+                                            <ColumnConstraints />
+                                            <ColumnConstraints />
+                                            <ColumnConstraints />
+                                            <ColumnConstraints />
+                                        </columnConstraints>
+                                        <rowConstraints>
+                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        </rowConstraints>
+                                        <TuringMachineCompilerView fx:id="mdtCompilerView" GridPane.columnSpan="2" GridPane.rowSpan="4">
+                                            <GridPane.margin>
+                                                <Insets bottom="20" left="30.0" top="20" />
+                                            </GridPane.margin>
+                                        </TuringMachineCompilerView>
+                                        <MFXCircleToggleNode fx:id="importButton" text="Import" textAlignment="CENTER" textPosition="TOP" GridPane.columnIndex="14" GridPane.rowIndex="2" GridPane.rowSpan="2">
+                                            <graphic>
+                                                <MFXFontIcon description="fas-plus" size="32.0" />
+                                            </graphic>
+                                            <font>
+                                                <Font name="Source Code Pro Medium for Powerline" size="12.0" />
+                                            </font>
+                                            <GridPane.margin>
+                                                <Insets bottom="30.0" />
+                                            </GridPane.margin>
+                                        </MFXCircleToggleNode>
+                                        <MFXCircleToggleNode text="Save" textAlignment="CENTER" textPosition="TOP" GridPane.columnIndex="14" GridPane.rowSpan="2">
+                                            <graphic>
+                                                <MFXFontIcon description="fas-floppy-disk" size="32.0" />
+                                            </graphic>
+                                            <font>
+                                                <Font name="Source Code Pro Medium for Powerline" size="12.0" />
+                                            </font>
+                                            <GridPane.margin>
+                                                <Insets />
+                                            </GridPane.margin>
+                                        </MFXCircleToggleNode>
+                                    </GridPane>
+                                    <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" GridPane.columnIndex="6" GridPane.columnSpan="5" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.rowSpan="2" GridPane.valignment="CENTER">
+                                        <MFXTextField id="inputTextField" fx:id="inputTextField" floatMode="DISABLED" minHeight="30.0" prefHeight="30.0" prefWidth="380.0" promptText="Input" HBox.hgrow="ALWAYS">
+                                            <HBox.margin>
+                                                <Insets />
+                                            </HBox.margin>
+                                            <font>
+                                                <Font name="Source Code Pro Medium for Powerline" size="13.0" />
+                                            </font>
+                                        </MFXTextField>
+                                        <MFXButton fx:id="loadInputButton" minHeight="30.0" minWidth="100.0" prefHeight="30.0" styleClass="standard-button" text="Load" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1" HBox.hgrow="ALWAYS">
+                                            <font>
+                                                <Font name="Source Code Pro Medium for Powerline" size="13.0" />
+                                            </font>
+                                            <HBox.margin>
+                                                <Insets />
+                                            </HBox.margin>
+                                        </MFXButton>
+                                        <GridPane.margin>
+                                            <Insets top="20.0" />
+                                        </GridPane.margin>
+                                    </HBox>
+                                    <MFXCircleToggleNode fx:id="stepBackButton" text="Back" textAlignment="CENTER" textPosition="TOP" wrapText="true" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                        <graphic>
+                                            <MFXFontIcon description="fas-backward-step" size="32.0" />
+                                        </graphic>
+                                        <font>
+                                            <Font name="Source Code Pro Medium for Powerline" size="12.0" />
+                                        </font>
+                                        <GridPane.margin>
+                                            <Insets bottom="15.0" />
+                                        </GridPane.margin>
+                                    </MFXCircleToggleNode>
+                                    <MFXCircleToggleNode fx:id="playButton" text="Play" textAlignment="CENTER" textPosition="TOP" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                        <graphic>
+                                            <MFXFontIcon description="fas-play" size="32.0" />
+                                        </graphic>
+                                        <font>
+                                            <Font name="Source Code Pro Medium for Powerline" size="12.0" />
+                                        </font>
+                                        <GridPane.margin>
+                                            <Insets bottom="15.0" />
+                                        </GridPane.margin>
+                                    </MFXCircleToggleNode>
+                                    <MFXCircleToggleNode fx:id="pauseButton" text="Pause" textAlignment="CENTER" textPosition="TOP" GridPane.columnIndex="8" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                        <graphic>
+                                            <MFXFontIcon description="fas-pause" size="32.0" />
+                                        </graphic>
+                                        <font>
+                                            <Font name="Source Code Pro Medium for Powerline" size="12.0" />
+                                        </font>
+                                        <GridPane.margin>
+                                            <Insets bottom="15.0" />
+                                        </GridPane.margin>
+                                    </MFXCircleToggleNode>
+                                    <MFXCircleToggleNode fx:id="resetButton" contentDisplay="CENTER" text="Stop" textPosition="TOP" wrapText="true" GridPane.columnIndex="9" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                        <graphic>
+                                            <MFXFontIcon description="fas-stop" size="32.0" />
+                                        </graphic>
+                                        <font>
+                                            <Font name="Source Code Pro Medium for Powerline" size="12.0" />
+                                        </font>
+                                        <GridPane.margin>
+                                            <Insets bottom="15.0" />
+                                        </GridPane.margin>
+                                    </MFXCircleToggleNode>
+                                    <MFXCircleToggleNode fx:id="stepButton" text="Step" textAlignment="CENTER" textPosition="TOP" GridPane.columnIndex="10" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                        <graphic>
+                                            <MFXFontIcon description="fas-forward-step" size="32.0" />
+                                        </graphic>
+                                        <font>
+                                            <Font name="Source Code Pro Medium for Powerline" size="12.0" />
+                                        </font>
+                                        <GridPane.margin>
+                                            <Insets bottom="15.0" />
+                                        </GridPane.margin>
+                                    </MFXCircleToggleNode>
+                                    <Label styleClass="header-label" text="Speed (ms)" textAlignment="CENTER" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.rowSpan="2" GridPane.valignment="CENTER">
+                                        <font>
+                                            <Font name="Source Code Pro Medium for Powerline" size="12.0" />
+                                        </font>
+                                        <GridPane.margin>
+                                            <Insets right="60.0" top="8.0" />
+                                        </GridPane.margin></Label>
+                                    <MFXSlider id="speedSlider" fx:id="speedSlider" max="1000" min="10" prefWidth="300.0" value="500" GridPane.columnIndex="7" GridPane.columnSpan="4" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.rowSpan="2" GridPane.valignment="CENTER">
+                                        <GridPane.margin>
+                                            <Insets top="10.0" />
+                                        </GridPane.margin>
+                                    </MFXSlider>
+                                    <GridPane style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.12, -1.0, 2.0);" styleClass="mfx-scroll-pane" GridPane.columnSpan="6" GridPane.rowSpan="2147483647">
+                                        <columnConstraints>
+                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="150.0" prefWidth="150.0" />
+                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="163.0" minWidth="50.0" prefWidth="60.0" />
+                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="154.0" minWidth="50.0" prefWidth="60.0" />
+                                        </columnConstraints>
+                                        <rowConstraints>
+                                            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" valignment="CENTER" vgrow="ALWAYS" />
+                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                            <RowConstraints />
+                                        </rowConstraints>
+                                        <GridPane.margin>
+                                            <Insets bottom="25.0" left="25.0" right="75.0" top="25.0" />
+                                        </GridPane.margin>
+                                        <MFXScrollPane vbarPolicy="NEVER" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.rowSpan="100" GridPane.valignment="CENTER">
+                                            <ConfigurationListView fx:id="configurationsListView" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" prefHeight="145.0" prefWidth="438.0" />
+                                        </MFXScrollPane>
+                                        <HBox alignment="CENTER" spacing="80" style="-fx-background-color: -mfx-charcoal" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="0">
+                                            <Label fx:id="stateLabel" alignment="CENTER" contentDisplay="CENTER" styleClass="standard-label-white" text="State: q1" textAlignment="CENTER" wrapText="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                            </Label>
+                                            <Label fx:id="stepsLabel" alignment="CENTER" styleClass="standard-label-white" text="Steps: 76" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                            </Label>
+                                            <Label fx:id="spaceLabel" alignment="CENTER" contentDisplay="CENTER" styleClass="standard-label-white" text="Space: 102" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                            </Label>
+                                        </HBox>
+                                    </GridPane>
+                                </GridPane>
+                            </AnchorPane>
+                        </GridPane>
+                    </HBox>
+                    <HBox GridPane.columnIndex="18" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowSpan="2147483647" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                        <GridPane HBox.hgrow="ALWAYS">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            </rowConstraints>
+                            <CodeAreaYaml fx:id="codeArea" stylesheets="@yaml-keywords.css" GridPane.columnSpan="2147483647" GridPane.rowSpan="7" />
+                        </GridPane>
+                    </HBox>
+                </GridPane>
+            </AnchorPane>
+        </HBox>
+    </AnchorPane>
+</Tab>
