@@ -1,0 +1,22 @@
+@import 'css/MFXColors.css';
+
+.keyword {
+    -fx-fill: -mfx-dark-blue;
+    -fx-font-weight: bold;
+}
+
+.string {
+    -fx-fill: -mfx-dark-green;
+}
+
+.error {
+    -rtfx-background-color: #f0f0f0;
+    -rtfx-underline-color: red;
+    -rtfx-underline-dash-array: 2 2;
+    -rtfx-underline-width: 1;
+    -rtfx-underline-cap: butt;
+}
+
+ParagraphText {
+    -fx-tab-size: 2;
+}
