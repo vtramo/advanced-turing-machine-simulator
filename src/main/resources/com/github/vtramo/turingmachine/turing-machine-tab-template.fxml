@@ -130,7 +130,7 @@
                                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                         </rowConstraints>
-                                        <TuringMachineCompilerView fx:id="mdtCompilerView" GridPane.columnSpan="2" GridPane.rowSpan="4">
+                                        <TuringMachineCompilerView fx:id="turingMachineCompilerView" GridPane.columnSpan="2" GridPane.rowSpan="4">
                                             <GridPane.margin>
                                                 <Insets bottom="20" left="30.0" top="20" />
                                             </GridPane.margin>
