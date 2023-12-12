@@ -1,0 +1,76 @@
+name: Palindrome
+description: |
+  A Turing machine deciding the language 
+  L = {x∈{0,1}+ | x is palindrome}
+
+initial_state: s
+tapes: 2
+
+transitions:
+  s:
+    '>,>':
+      next_state: s
+      write: '>,>'
+      move: '->,->'
+
+    '1,_':
+      next_state: s
+      write: '1,1'
+      move: '->,->'
+
+    '0,_':
+      next_state: s
+      write: '0,0'
+      move: '->,->'
+
+    '_,_':
+      next_state: q
+      write: '_,_'
+      move: '<-,-'
+
+  q:
+    '0,_':
+      next_state: q
+      write: '0,_'
+      move: '<-,-'
+
+    '1,_':
+      next_state: q
+      write: '1,_'
+      move: '<-,-'
+
+    '>,_':
+      next_state: p
+      write: '>,_'
+      move: '->, <-'
+
+    '_,>':
+      next_state: "yes"
+      write: '>,_'
+      move: '->,<-'
+
+  p:
+    '0,0':
+      next_state: p
+      write: '0,0'
+      move: '->,<-'
+
+    '1,1':
+      next_state: p
+      write: '1,1'
+      move: '->,<-'
+
+    '0,1':
+      next_state: "no"
+      write: '0,1'
+      move: '-,-'
+
+    '1,0':
+      next_state: "no"
+      write: '1,0'
+      move: '-,-'
+
+    '_,>':
+      next_state: "yes"
+      write: '_,>'
+      move: '-, ->'
