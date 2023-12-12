@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.TextFlow?>
+
+<VBox fx:id="dialogContent" alignment="CENTER" stylesheets="@css/Buttons.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+    <HBox alignment="CENTER">
+        <GridPane alignment="CENTER">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="36.0" prefWidth="269.0" text="MACHINE HALTED" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+                <font>
+                    <Font name="Source Code Pro Semibold for Powerline" size="32.0" />
+                </font>
+            </Label>
+        </GridPane>
+    </HBox>
+   <TextFlow textAlignment="CENTER">
+      <VBox.margin>
+         <Insets bottom="10.0" />
+      </VBox.margin>
+      <Text text="The Turing machine has reached the halting state. Given the following input:" textAlignment="CENTER" wrappingWidth="960.0">
+         <font>
+            <Font name="Source Code Pro Medium" size="24.0" />
+         </font>
+      </Text>
+   </TextFlow>
+   <MFXScrollPane fx:id="inputScrollPane" fitToHeight="true" fitToWidth="true" prefHeight="110.0" prefWidth="1054.0" style="-fx-background-color: white" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+      <AnchorPane fx:id="inputTapeAnchorPaneContent" prefHeight="237.0" prefWidth="1091.0" style="-fx-background-color: white" />
+   </MFXScrollPane>
+    <TextFlow textAlignment="CENTER">
+        <VBox.margin>
+            <Insets bottom="20.0" top="20.0" />
+        </VBox.margin>
+        <Text text="the machine has computed and left on the output tape the string:">
+           <font>
+               <Font name="Source Code Pro Medium" size="24.0" />
+           </font>
+        </Text>
+    </TextFlow>
+    <MFXScrollPane fx:id="outputScrollPane" fitToHeight="true" fitToWidth="true" prefHeight="110.0" prefWidth="1054.0" style="-fx-background-color: white" vbarPolicy="NEVER">
+        <AnchorPane fx:id="outputTapeAnchorPaneContent" prefHeight="100.0" prefWidth="1091.0" style="-fx-background-color: white" />
+    </MFXScrollPane>
+    <VBox alignment="CENTER">
+        <Label fx:id="stepsLabel" alignment="TOP_RIGHT" text="Total steps: ">
+           <VBox.margin>
+               <Insets top="10.0" />
+           </VBox.margin>
+           <font>
+               <Font name="Source Code Pro Medium for Powerline" size="20.0" />
+           </font>
+        </Label>
+        <Label fx:id="spaceLabel" alignment="TOP_RIGHT" text="Total space: ">
+           <VBox.margin>
+               <Insets top="10.0" />
+           </VBox.margin>
+           <font>
+               <Font name="Source Code Pro Medium for Powerline" size="20.0" />
+           </font>
+        </Label>
+    </VBox>
+</VBox>
