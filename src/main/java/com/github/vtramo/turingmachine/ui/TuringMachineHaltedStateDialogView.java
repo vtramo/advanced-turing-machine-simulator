@@ -32,8 +32,8 @@ import static com.github.vtramo.turingmachine.engine.TerminalState.REJECTING_STA
 import static com.github.vtramo.turingmachine.ui.TapeView.CELL_WIDTH;
 
 public class TuringMachineHaltedStateDialogView {
-    private static final String MDT_DECIDING_STATE_FXML = "mdt-deciding-state-dialog.fxml";
-    private static final String MDT_HALTING_STATE_DIALOG_FXML = "mdt-halting-state-dialog.fxml";
+    private static final String MDT_DECIDING_STATE_FXML = "turing-machine-deciding-state-dialog.fxml";
+    private static final String MDT_HALTING_STATE_DIALOG_FXML = "turing-machine-halting-state-dialog.fxml";
     private static final double DIALOG_WIDTH = 960;
     private static final double TAPE_SCROLL_PANE_HEIGHT = 80;
     private static final Map<TerminalState, Text> textByTerminalState = Map.of(
