@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Turing machine",
+  "description": "Turing machine",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "description": "The name of Turing's machine",
+      "type": "string"
+    },
+    "description": {
+      "description": "A description of the Turing machine and its behavior",
+      "type": "string"
+    },
+    "initial_state": {
+      "description": "The initial state of the Turing machine",
+      "type": "string"
+    },
+    "tapes": {
+      "description": "The number of tapes in the Turing machine",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100
+    },
+    "transitions": {
+      "description": "The transition function of the Turing machine",
+      "type": "object",
+      "minProperties": 1,
+      "patternProperties": {
+        "^.*$": {
+          "type": "object",
+          "minProperties": 1,
+          "patternProperties": {
+            "((.,)+.)|.": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "next_state": {
+                  "type": "string"
+                },
+                "write": {
+                  "type": "string",
+                  "pattern": "((.,)+.)|."
+                },
+                "move": {
+                  "type": "string",
+                  "pattern": "(((->)|(<-)|(-))|(((->)|(<-)|(-)),)+((->)|(<-)|(-)))"
+                }
+              },
+              "required": ["next_state", "write", "move"]
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": ["initial_state", "tapes", "transitions"]
+}
