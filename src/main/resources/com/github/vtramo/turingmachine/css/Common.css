@@ -1,0 +1,96 @@
+/*
+ * Copyright (C) 2022 Parisi Alessandro
+ * This file is part of MaterialFX (https://github.com/palexdev/MaterialFX).
+ *
+ * MaterialFX is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MaterialFX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with MaterialFX.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@import '../fonts/Fonts.css';
+@import 'MFXColors.css';
+
+.header-label {
+	-fx-font-family: 'Source Code Pro Medium';
+	-fx-font-size: 13;
+	-fx-text-fill: -mfx-charcoal;
+}
+
+.text-compiler {
+	-fx-font-family: 'Source Code Pro Light';
+	-fx-font-size: 13;
+}
+
+.header-label .text {
+	-fx-font-smoothing-type: lcd;
+}
+
+.sub-header-label {
+	-fx-font-family: 'Open Sans SemiBold';
+	-fx-text-fill: -mfx-charcoal;
+}
+
+.sub-header-label .text {
+	-fx-font-smoothing-type: lcd;
+}
+
+.grid-pane {
+	-fx-background-color: transparent;
+}
+
+.grid-background {
+	-fx-background-color: white;
+	-fx-background-radius: 10;
+	-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.12, -1.0, 2.0);
+}
+
+.standard-label-white {
+	-fx-text-fill: white;
+	-fx-font-size: 15;
+	-fx-font-family: "Source Code Pro Medium";
+}
+
+.standard-button {
+	-fx-background-color: -mfx-charcoal;
+	-fx-border-radius: 0;
+	-fx-border-insets: 0;
+	-fx-border-color: -mfx-charcoal;
+	-fx-text-fill: white;
+}
+
+
+.mfx-dialog-standard .header-label {
+	-fx-font-family: "Source Code Pro Medium";
+	-fx-font-size: 14;
+	-fx-text-fill: -mfx-charcoal;
+	-fx-graphic-text-gap: 10;
+}
+
+.mfx-dialog-standard .header-label .text {
+	-fx-font-smoothing-type: lcd;
+}
+
+.mfx-info-dialog-standard .header-label .mfx-font-icon {
+	-mfx-color: derive(-mfx-charcoal, 60%);
+}
+
+.mfx-info-dialog-standard .actions-pane .mfx-button {
+	-fx-text-fill: derive(-mfx-charcoal, -20%);
+}
+
+.mfx-info-dialog-standard .actions-pane .mfx-button .mfx-ripple-generator {
+	-mfx-ripple-color: derive(-mfx-charcoal, 80%);
+}
+
+.mfx-info-dialog-standard .actions-pane .mfx-button:hover {
+	-fx-background-color: derive(-mfx-charcoal, 110%);
+}
