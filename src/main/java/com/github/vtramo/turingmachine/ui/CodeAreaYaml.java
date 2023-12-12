@@ -71,6 +71,12 @@ public class CodeAreaYaml extends VirtualizedScrollPane<CodeArea> {
         codeArea.appendText(text);
     }
 
+    public void setText(final String text) {
+        codeArea.clear();
+        codeArea.appendText(text);
+        moveToZeroLine();
+    }
+
     public String getText() {
         return codeArea.getText();
     }
