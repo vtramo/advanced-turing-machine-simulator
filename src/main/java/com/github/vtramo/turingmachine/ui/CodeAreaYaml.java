@@ -83,6 +83,10 @@ public class CodeAreaYaml extends VirtualizedScrollPane<CodeArea> {
             appendText("\n");
             totalParagraphs = paragraphs.size();
         }
+        moveToZeroLine();
+    }
+
+    private void moveToZeroLine() {
         codeArea.moveTo(0);
         codeArea.requestFollowCaret();
     }
