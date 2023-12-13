@@ -33,41 +33,51 @@ public class HomeController {
 
     @SneakyThrows
     public void initialize() {
-        addListenerToNewTabButton();
-        createMdtTab("Palindrome", MDT_PALINDROME_PATH);
+        addListenerToNewTuringMachineTabButton();
+        createTuringMachineTab("Palindrome", MDT_PALINDROME_PATH);
     }
 
-    private void addListenerToNewTabButton() {
+    private void addListenerToNewTuringMachineTabButton() {
         final SingleSelectionModel<Tab> singleSelectionModelTab = tabPane.getSelectionModel();
         final ReadOnlyObjectProperty<Tab> readOnlyObjectPropertyTab = singleSelectionModelTab.selectedItemProperty();
         readOnlyObjectPropertyTab.addListener((__, ___, newSelectedTab) -> {
             if (newSelectedTab != addTabButton) return;
-            final String mdtTabTitle = buildNextTabTitle();
-            createMdtTab(mdtTabTitle, MDT_PALINDROME_PATH);
+            final String turingMachineTabTitle = buildNextTuringMachineTabTitle();
+            createTuringMachineTab(turingMachineTabTitle, MDT_PALINDROME_PATH);
         });
     }
 
-    private String buildNextTabTitle() {
+    private String buildNextTuringMachineTabTitle() {
         final ObservableList<Tab> tabs = tabPane.getTabs();
-        return "MDT " + (tabs.size());
+        return STR."Turing Machine \{tabs.size()}";
     }
 
     @SneakyThrows
-    private Tab createMdtTab(final String title, final Path programYamlPath) {
-        final String programYaml = readMdtYamlDefinition(programYamlPath);
-        final FXMLLoader fxmlLoader = new FXMLLoader(TuringMachineApplication.class.getResource(MDT_TAB_TEMPLATE_FXML));
-        fxmlLoader.setController(new TuringMachineTabController(primaryStage, programYaml));
-        final Tab tab = fxmlLoader.load();
-        tab.setText(title);
-        setTabClosablePolicy(tab);
-        addTab(tab);
-        selectTab(tab);
-        return tab;
+    public Tab createTuringMachineTab(final String title, final Path yamlProgramPath) {
+        final String yamlProgram = readTuringMachineYamlDefinition(yamlProgramPath);
+        return createTuringMachineTab(title, yamlProgram);
     }
 
-    private static String readMdtYamlDefinition(final Path programYamlPath) throws IOException {
+    public Tab createTuringMachineTab(final String title, final String yamlProgram) {
+        try {
+            final FXMLLoader fxmlLoader = new FXMLLoader(TuringMachineApplication.class.getResource(MDT_TAB_TEMPLATE_FXML));
+            fxmlLoader.setController(new TuringMachineTabController(this, primaryStage, yamlProgram));
+            final Tab tab = fxmlLoader.load();
+            tab.setText(title);
+            setTabClosablePolicy(tab);
+            addTab(tab);
+            selectTab(tab);
+            return tab;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static String readTuringMachineYamlDefinition(final Path programYamlPath) {
         try (final FileInputStream fileInputStream = new FileInputStream(programYamlPath.toFile())) {
             return new String(fileInputStream.readAllBytes());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

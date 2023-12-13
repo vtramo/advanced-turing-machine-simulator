@@ -6,18 +6,10 @@ import com.github.vtramo.turingmachine.engine.TuringMachine;
 import com.github.vtramo.turingmachine.engine.TerminalState;
 import com.github.vtramo.turingmachine.engine.Transition;
 import com.github.vtramo.turingmachine.parser.TuringMachineParserYaml;
-import com.github.vtramo.turingmachine.parser.TuringMachineValidatorYaml;
-import com.github.vtramo.turingmachine.parser.ValidationResult;
 import com.github.vtramo.turingmachine.ui.*;
-import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXCircleToggleNode;
 import io.github.palexdev.materialfx.controls.MFXScrollPane;
 import io.github.palexdev.materialfx.controls.MFXSlider;
-import io.github.palexdev.materialfx.dialogs.MFXGenericDialog;
-import io.github.palexdev.materialfx.dialogs.MFXGenericDialogBuilder;
-import io.github.palexdev.materialfx.dialogs.MFXStageDialog;
-import io.github.palexdev.materialfx.enums.ScrimPriority;
-import io.github.palexdev.mfxresources.fonts.MFXFontIcon;
 import javafx.beans.property.DoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,22 +20,17 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lombok.SneakyThrows;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import static com.github.vtramo.turingmachine.ui.BlankSymbolView.blank;
 import static com.github.vtramo.turingmachine.ui.StartSymbolView.startSymbol;
+import static com.github.vtramo.turingmachine.ui.TuringMachineImporterYaml.*;
 
 public class TuringMachineTabController {
     @FXML
@@ -90,7 +77,7 @@ public class TuringMachineTabController {
     private CodeAreaYaml codeArea;
     @FXML
     private TuringMachineCompilerView turingMachineCompilerView;
-    private final String programYaml;
+    private String yamlProgram;
     private String input = "";
     private TuringMachine turingMachine;
     private TuringMachine.Computation computation;
@@ -99,11 +86,13 @@ public class TuringMachineTabController {
     private boolean stepInProgress;
     private long speedDelayMs = 500L;
 
+    private final HomeController homeController;
     private final Stage primaryStage;
 
-    public TuringMachineTabController(final Stage primaryStage, final String programYaml) {
+    public TuringMachineTabController(final HomeController homeController, final Stage primaryStage, final String yamlProgram) {
+        this.homeController = homeController;
         this.primaryStage = primaryStage;
-        this.programYaml = programYaml;
+        this.yamlProgram = yamlProgram;
     }
 
     @SneakyThrows
@@ -154,58 +143,8 @@ public class TuringMachineTabController {
         loadInputButton.getStyleClass().removeFirst();
         loadInputButton.setOnMouseClicked(__ -> loadInputFromTextField());
 
-        // TODO: refactor
         importButton.setOnMouseClicked(__ -> {
-            final FileChooser fileChooser = new FileChooser();
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("YAML Files", "*.yaml"));
-            final Optional<File> optionalFile = Optional.ofNullable(fileChooser.showOpenDialog(primaryStage));
-            if (optionalFile.isPresent()) {
-                final File file = optionalFile.get();
-                try (final FileInputStream fileInputStream = new FileInputStream(file)) {
-                    final String programYaml = new String(fileInputStream.readAllBytes());
-                    final TuringMachineValidatorYaml turingMachineValidatorYaml = new TuringMachineValidatorYaml();
-                    final ValidationResult validationResult = turingMachineValidatorYaml.validate(programYaml);
-
-                    final MFXGenericDialog dialogContent = MFXGenericDialogBuilder.build()
-                        .makeScrollable(true)
-                        .get();
-
-                    final MFXStageDialog dialog = MFXGenericDialogBuilder.build(dialogContent)
-                        .toStageDialogBuilder()
-                        .initOwner(primaryStage)
-                        .initModality(Modality.APPLICATION_MODAL)
-                        .setDraggable(true)
-                        .setOwnerNode(masterAnchorPane)
-                        .setScrimPriority(ScrimPriority.WINDOW)
-                        .setScrimOwner(true)
-                        .get();
-                    dialogContent.setShowMinimize(false);
-                    dialogContent.setShowAlwaysOnTop(false);
-                    dialogContent.setMaxSize(400, 200);
-
-                    if (validationResult.containsErrors()) {
-                        dialogContent.setContentText("The file is not well-formed.");
-                        dialogContent.addActions(Map.entry(new MFXButton("OK"), ___ -> dialog.close()));
-                        MFXFontIcon errorIcon = new MFXFontIcon("fas-circle-xmark", 18);
-                        dialogContent.setHeaderIcon(errorIcon);
-                        dialogContent.setHeaderText("Invalid file");
-                        dialogContent.getStyleClass().add("mfx-error-dialog");
-                    } else {
-                        MFXFontIcon infoIcon = new MFXFontIcon("fas-circle-question", 18);
-                        dialogContent.setHeaderIcon(infoIcon);
-                        dialogContent.setContentText("Where would you like to open the machine 'name'?");
-                        dialogContent.getStyleClass().add("mfx-info-dialog-standard");
-                        dialogContent.addActions(Map.entry(new MFXButton("This window"), ___ -> dialog.close()));
-                        dialogContent.addActions(Map.entry(new MFXButton("New window"), ___ -> dialog.close()));
-                        dialogContent.addActions(Map.entry(new MFXButton("Cancel"), ___ -> dialog.close()));
-                    }
-
-                    dialogContent.getStyleClass().add("mfx-dialog-standard");
-                    dialog.showDialog();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+            importTuringMachine();
         });
     }
 
@@ -225,10 +164,10 @@ public class TuringMachineTabController {
 
     private void configureMdt() throws JsonProcessingException {
         final TuringMachineParserYaml turingMachineParserYaml = new TuringMachineParserYaml();
-        turingMachine = turingMachineParserYaml.parse(programYaml);
+        turingMachine = turingMachineParserYaml.parse(yamlProgram);
         computation = turingMachine.startComputation(input);
 
-        codeArea.appendText(programYaml);
+        codeArea.appendText(yamlProgram);
 
         createTapes();
 
@@ -254,6 +193,27 @@ public class TuringMachineTabController {
         tapesVBox.getChildren().addAll(tapeViews);
         tapesScrollPane.setFitToHeight(tapes <= 6);
         tapeViewController = new TapeViewController(tapeViews);
+    }
+
+    private void importTuringMachine() {
+        final TuringMachineImporterYaml turingMachineImporterYaml = new TuringMachineImporterYaml(primaryStage, masterAnchorPane);
+        final Optional<TuringMachineImportResult> optionalTuringMachineImportResult = turingMachineImporterYaml.importTuringMachineFromYamlDefinition();
+        if (optionalTuringMachineImportResult.isEmpty()) return;
+
+        final TuringMachineImportResult turingMachineImportResult = optionalTuringMachineImportResult.get();
+        final TuringMachine importedTuringMachine = turingMachineImportResult.turingMachine();
+        final String importedYamlProgram = turingMachineImportResult.yamlProgram();
+        turingMachine = importedTuringMachine;
+        yamlProgram = importedYamlProgram;
+
+        if (turingMachineImportResult.openNewWindow()) {
+            final String turingMachineName = turingMachine.getName();
+            homeController.createTuringMachineTab(turingMachineName, yamlProgram);
+        } else {
+            codeArea.setText(yamlProgram);
+            reset();
+        }
+
     }
 
     private void play() {
