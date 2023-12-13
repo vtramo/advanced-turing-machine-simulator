@@ -64,12 +64,14 @@ public class TuringMachineImporterYaml {
             return Optional.empty();
         }
 
-        final OpenNewWindowDialogResult openNewWindowDialogResult = askForOpenNewWindow();
+        final TuringMachine turingMachine = parseTuringMachineYamlDefinition(yamlProgram);
+        final String turingMachineName = turingMachine.getName();
+
+        final OpenNewWindowDialogResult openNewWindowDialogResult = askForOpenNewWindow(turingMachineName);
         if (Objects.equals(openNewWindowDialogResult, OpenNewWindowDialogResult.CANCEL)) {
             return Optional.empty();
         }
 
-        final TuringMachine turingMachine = parseTuringMachineYamlDefinition(yamlProgram);
         final boolean openNewWindow = Objects.equals(OpenNewWindowDialogResult.NEW_WINDOW, openNewWindowDialogResult);
         return Optional.of(new TuringMachineImportResult(turingMachine, yamlProgram, openNewWindow));
     }
@@ -92,11 +94,11 @@ public class TuringMachineImporterYaml {
         }
     }
 
-    private OpenNewWindowDialogResult askForOpenNewWindow() {
+    private OpenNewWindowDialogResult askForOpenNewWindow(final String turingMachineName) {
         final OpenNewWindowDialogResult[] openNewWindowDialogResult = new OpenNewWindowDialogResult[1];
         final MFXFontIcon infoIcon = new MFXFontIcon("fas-circle-question", 18);
         dialogContent.setHeaderIcon(infoIcon);
-        dialogContent.setContentText("Where would you like to open the machine 'name'?");
+        dialogContent.setContentText(STR."Where would you like to open the Turing machine '\{turingMachineName}'?");
         dialogContent.getStyleClass().add("mfx-info-dialog-standard");
 
         dialogContent.addActions(Map.entry(new MFXButton("This window"), ___ -> {
