@@ -116,6 +116,11 @@ public class TuringMachineImporterYaml {
             dialog.close();
         }));
 
+        dialogContent.setOnClose(___ -> {
+            openNewWindowDialogResult[0] = OpenNewWindowDialogResult.CANCEL;
+            dialog.close();
+        });
+
         dialog.showAndWait();
         return openNewWindowDialogResult[0];
     }
