@@ -30,7 +30,7 @@ import java.util.stream.IntStream;
 
 public class CodeAreaYaml extends VirtualizedScrollPane<CodeArea> {
 
-    private static final double LINE_WIDTH = 22.80D;
+    private static final double LINE_WIDTH = 21.20D;
     private static final String KEYWORD_YAML_STYLE = "keyword";
     private static final String STRING_YAML_STYLE = "string";
     private static final String ERROR_YAML_STYLE = "error";
@@ -38,7 +38,7 @@ public class CodeAreaYaml extends VirtualizedScrollPane<CodeArea> {
     private static final String KEYWORD_PATTERN = "\\S*:";
     private static final String STRING_PATTERN = "('.*')|(\".*\")|(\\|((\\n|.*)  +.*)+)";
     private static final String KEYWORD_GROUP = "KEYWORD";
-    private static final Pattern PATTERN = Pattern.compile("(?<" + KEYWORD_GROUP + ">" + KEYWORD_PATTERN + ")|(?<STRING>" + STRING_PATTERN + ")");
+    private static final Pattern PATTERN = Pattern.compile(STR."(?<\{KEYWORD_GROUP}>\{KEYWORD_PATTERN})|(?<STRING>\{STRING_PATTERN})");
 
     private final CodeArea codeArea;
     private final Popup popup = new Popup();
@@ -74,7 +74,7 @@ public class CodeAreaYaml extends VirtualizedScrollPane<CodeArea> {
     public void setText(final String text) {
         codeArea.clear();
         codeArea.appendText(text);
-        moveToZeroLine();
+        addPaddingLines();
     }
 
     public String getText() {
