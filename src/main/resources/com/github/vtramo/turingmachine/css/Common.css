@@ -16,7 +16,6 @@
  * along with MaterialFX.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../fonts/Fonts.css';
 @import 'MFXColors.css';
 
 .header-label {
@@ -65,32 +64,4 @@
 	-fx-border-insets: 0;
 	-fx-border-color: -mfx-charcoal;
 	-fx-text-fill: white;
-}
-
-
-.mfx-dialog-standard .header-label {
-	-fx-font-family: "Source Code Pro Medium";
-	-fx-font-size: 14;
-	-fx-text-fill: -mfx-charcoal;
-	-fx-graphic-text-gap: 10;
-}
-
-.mfx-dialog-standard .header-label .text {
-	-fx-font-smoothing-type: lcd;
-}
-
-.mfx-info-dialog-standard .header-label .mfx-font-icon {
-	-mfx-color: derive(-mfx-charcoal, 60%);
-}
-
-.mfx-info-dialog-standard .actions-pane .mfx-button {
-	-fx-text-fill: derive(-mfx-charcoal, -20%);
-}
-
-.mfx-info-dialog-standard .actions-pane .mfx-button .mfx-ripple-generator {
-	-mfx-ripple-color: derive(-mfx-charcoal, 80%);
-}
-
-.mfx-info-dialog-standard .actions-pane .mfx-button:hover {
-	-fx-background-color: derive(-mfx-charcoal, 110%);
 }

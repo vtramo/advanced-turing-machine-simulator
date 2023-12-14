@@ -13,6 +13,7 @@ import io.github.palexdev.materialfx.enums.ScrimPriority;
 import io.github.palexdev.mfxresources.fonts.MFXFontIcon;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -99,7 +100,6 @@ public class TuringMachineImporterYaml {
         final MFXFontIcon infoIcon = new MFXFontIcon("fas-circle-question", 18);
         dialogContent.setHeaderIcon(infoIcon);
         dialogContent.setContentText(STR."Where would you like to open the Turing machine '\{turingMachineName}'?");
-        dialogContent.getStyleClass().add("mfx-info-dialog-standard");
 
         dialogContent.addActions(Map.entry(new MFXButton("This window"), ___ -> {
             openNewWindowDialogResult[0] = OpenNewWindowDialogResult.THIS_WINDOW;
