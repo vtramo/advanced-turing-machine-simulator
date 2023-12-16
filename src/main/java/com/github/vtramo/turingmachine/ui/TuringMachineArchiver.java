@@ -59,6 +59,7 @@ public class TuringMachineArchiver {
             Files.write(turingMachineYamlProgramPath, turingMachineYamlProgram.getBytes());
             removeAsteriskToTuringMachineTabTitle();
             this.turingMachineYamlProgram = turingMachineYamlProgram;
+            isTuringMachineCodeChangedLastTime = false;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
