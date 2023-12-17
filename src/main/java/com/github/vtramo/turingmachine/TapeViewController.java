@@ -18,14 +18,14 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class TapeViewController {
-    private static final long DELAY_BEFORE_NEXT_MOVE_MS = 100L;
+    public static final long DELAY_BEFORE_NEXT_MOVE_MS = 100L;
     private final List<TapeView> tapeViews = new ArrayList<>();
 
     public TapeViewController(final TapeView... tapeViews) {
         this.tapeViews.addAll(Arrays.stream(tapeViews).toList());
     }
 
-    public CompletableFuture<Void> step(final Transition transition, long delayMs) {
+    public CompletableFuture<Void> step(final Transition transition, final double delayMs) {
         final CompletableFuture<Void> completableFuture = new CompletableFuture<>();
         final List<Move> moves = transition.moves();
         final Timeline[] timelines = new Timeline[moves.size()];
@@ -53,7 +53,7 @@ public class TapeViewController {
     public CompletableFuture<Void> stepBack(
         final Configuration previousConfiguration,
         final Transition lastTransition,
-        final long delayMs
+        final double delayMs
     ) {
         final CompletableFuture<Void> completableFuture = new CompletableFuture<>();
         final char[] previousSymbols = previousConfiguration.currentSymbols();

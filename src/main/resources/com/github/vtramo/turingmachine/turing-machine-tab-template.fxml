@@ -10,7 +10,7 @@
 <?import com.github.vtramo.turingmachine.ui.CodeAreaYaml?>
 <?import com.github.vtramo.turingmachine.ui.ConfigurationListView?>
 <?import com.github.vtramo.turingmachine.ui.TuringMachineCompilerView?>
-<Tab fx:id="tab" text="Left" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+<Tab fx:id="turingMachineTab" text="Left" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
     <AnchorPane minHeight="0.0" minWidth="0.0">
         <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <AnchorPane fx:id="masterAnchorPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
@@ -146,7 +146,7 @@
                                                 <Insets bottom="30.0" />
                                             </GridPane.margin>
                                         </MFXCircleToggleNode>
-                                        <MFXCircleToggleNode text="Save" textAlignment="CENTER" textPosition="TOP" GridPane.columnIndex="14" GridPane.rowSpan="2">
+                                        <MFXCircleToggleNode fx:id="saveButton" text="Save" textAlignment="CENTER" textPosition="TOP" GridPane.columnIndex="14" GridPane.rowSpan="2">
                                             <graphic>
                                                 <MFXFontIcon description="fas-floppy-disk" size="32.0" />
                                             </graphic>
@@ -241,7 +241,7 @@
                                         <GridPane.margin>
                                             <Insets right="60.0" top="8.0" />
                                         </GridPane.margin></Label>
-                                    <MFXSlider id="speedSlider" fx:id="speedSlider" max="1000" min="10" prefWidth="300.0" value="500" GridPane.columnIndex="7" GridPane.columnSpan="4" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.rowSpan="2" GridPane.valignment="CENTER">
+                                    <MFXSlider id="speedSlider" fx:id="speedSlider" max="1000" min="100" prefWidth="300.0" value="500" GridPane.columnIndex="7" GridPane.columnSpan="4" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.rowSpan="2" GridPane.valignment="CENTER">
                                         <GridPane.margin>
                                             <Insets top="10.0" />
                                         </GridPane.margin>
@@ -389,7 +389,7 @@
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             </rowConstraints>
-                            <CodeAreaYaml fx:id="codeArea" stylesheets="@yaml-keywords.css" GridPane.columnSpan="2147483647" GridPane.rowSpan="7" />
+                            <CodeAreaYaml fx:id="codeAreaYaml" stylesheets="@yaml-keywords.css" GridPane.columnSpan="2147483647" GridPane.rowSpan="7" />
                         </GridPane>
                     </HBox>
                 </GridPane>

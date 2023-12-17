@@ -28,6 +28,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+import static com.github.vtramo.turingmachine.TapeViewController.DELAY_BEFORE_NEXT_MOVE_MS;
 import static com.github.vtramo.turingmachine.ui.BlankSymbolView.blank;
 import static com.github.vtramo.turingmachine.ui.StartSymbolView.startSymbol;
 import static com.github.vtramo.turingmachine.ui.TuringMachineImporterYaml.*;
@@ -84,7 +85,7 @@ public class TuringMachineTabController {
     private ObservableList<Configuration> observableConfigurations;
     private boolean isPlaying;
     private boolean stepInProgress;
-    private long speedDelayMs = 500L;
+    private double speedDelayMs = 500D;
 
     private final HomeController homeController;
     private final Stage primaryStage;
@@ -149,9 +150,10 @@ public class TuringMachineTabController {
     }
 
     private void configureSpeedSlider() {
-        speedSlider.setValue(speedDelayMs);
+        speedSlider.setValue(speedDelayMs - DELAY_BEFORE_NEXT_MOVE_MS + 0.1);
         final DoubleProperty speedSliderDoubleProperty = speedSlider.valueProperty();
-        speedSliderDoubleProperty.addListener((__, ___, newValue) -> speedDelayMs = newValue.longValue());
+        speedSliderDoubleProperty.addListener((__, ___, newValue)
+            -> speedDelayMs = newValue.longValue() - DELAY_BEFORE_NEXT_MOVE_MS + 0.1);
     }
 
     private void configureMdtCompiler() {

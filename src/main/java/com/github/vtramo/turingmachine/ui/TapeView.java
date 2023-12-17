@@ -123,7 +123,7 @@ public class TapeView extends Pane {
         return totPaddingCellsAdded + 1;
     }
 
-    public Timeline right(final long ms) {
+    public Timeline right(final double ms) {
         final CellView nextRightCell = getNextRightCell();
         removeCellInFirstPosition();
         removeCellInLastPosition();
@@ -145,7 +145,7 @@ public class TapeView extends Pane {
         }
     }
 
-    public Timeline left(final long ms) {
+    public Timeline left(final double ms) {
         final CellView nextLeftCell = getNextLeftCell();
         removeCellInLastPosition();
         removeCellInFirstPosition();
@@ -165,7 +165,7 @@ public class TapeView extends Pane {
                 .clone();
     }
 
-    private Timeline buildTranslateXTimeline(final double offset, final long ms) {
+    private Timeline buildTranslateXTimeline(final double offset, final double ms) {
         final KeyFrame[] keyFrames = visibleCells.stream()
             .map(cell -> new KeyValue(cell.translateXProperty(), cell.getTranslateX() + offset))
             .map(keyValue -> new KeyFrame(Duration.millis(ms), keyValue))
