@@ -1,0 +1,78 @@
+.tab .tab-label {
+    -fx-alignment: CENTER;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 0 10 0 0;
+}
+
+.tab-pane:top *.tab-header-area {
+    -fx-padding: 0 0 0 0;
+}
+
+.tab-pane {
+    -fx-background-color: white;
+    -fx-tab-min-width: 35px;
+    -fx-tab-min-height: 35px;
+    -fx-tab-max-height: 35px;
+}
+
+.tab-pane .tab {
+    -fx-background-color: transparent;
+    -fx-font-family: "Source Code Pro Semibold";
+    -fx-font-size: 16;
+    -fx-alignment: center;
+    -fx-background-radius: 0;
+}
+
+.tab-pane .tab:selected {
+    -fx-background-color: -mfx-charcoal;
+    -fx-font-family: "Source Code Pro Medium";
+    -fx-font-size: 16;
+    -fx-alignment: center;
+    -fx-background-radius: 0;
+}
+
+.tab-pane .tab .text {
+    -fx-fill: -mfx-charcoal;
+}
+
+.tab-pane .tab:selected .text {
+    -fx-fill: white;
+}
+
+.tab-pane:focused .tab-header-area .headers-region .tab:selected .focus-indicator {
+    -fx-border-width: 0;
+    -fx-border-insets: 0;
+    -fx-border-radius: 0;
+}
+
+.tab-pane .headers-region {
+    -fx-background-color: transparent;
+}
+
+.tab-pane .tab-close-button {
+    -fx-background-color: white;
+}
+
+.tab-pane .tab-close-button:hover {
+    -fx-background-color: red;
+}
+
+#addTabButton {
+    -fx-font-size: 20;
+    -fx-padding: 0 0 0 0;
+}
+
+#addTabButton:hover {
+    -fx-fill: white;
+    -fx-border-color: transparent;
+    -fx-background-color: white;
+}
+
+
+#addTabButton {
+    -fx-pref-width: 30px;
+    -fx-fill-width: 30px;
+    -fx-min-width: 30px;
+    -fx-max-width: 30px;
+}
