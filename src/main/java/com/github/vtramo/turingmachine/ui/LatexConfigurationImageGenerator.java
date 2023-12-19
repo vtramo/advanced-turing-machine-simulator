@@ -12,8 +12,8 @@ import java.util.Objects;
 public class LatexConfigurationImageGenerator {
 
     private static final Map<Symbol, String> specialSymbolLatexFormula = Map.of(
-        Symbol.START, "\\vartriangleright",
-        Symbol.BLANK, "\\sqcup"
+        Symbol.START, "\\vartriangleright ",
+        Symbol.BLANK, "\\sqcup "
     );
 
     private static final String DESTINATION_PATH = "src/main/resources/formula.png";
