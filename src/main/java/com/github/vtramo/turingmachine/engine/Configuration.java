@@ -33,16 +33,19 @@ public class Configuration {
     private void calculateSpace() {
         int space = 0, spaceInputOutput = 0;
 
-        if (tapes.length <= 2) {
+        final int numTapes = tapes.length;
+        if (numTapes == 2) {
             space = spaceInputOutput = tapes[0].getSpace() + tapes[1].getSpace();
+        } else if (numTapes == 1) {
+            space = spaceInputOutput = tapes[0].getSpace();
         } else {
             space = tapes[0].getSpace();
-            for (int i = 1; i < tapes.length - 1; i++) {
+            for (int i = 1; i < numTapes - 1; i++) {
                 final int tapeSpace = tapes[i].getSpace();
                 space += tapeSpace;
                 spaceInputOutput += tapeSpace;
             }
-            space += tapes[tapes.length - 1].getSpace();
+            space += tapes[numTapes - 1].getSpace();
         }
 
         this.space = space;
