@@ -1,15 +1,15 @@
 package com.github.vtramo.turingmachine;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.vtramo.turingmachine.engine.Configuration;
-import com.github.vtramo.turingmachine.engine.TuringMachine;
 import com.github.vtramo.turingmachine.engine.TerminalState;
 import com.github.vtramo.turingmachine.engine.Transition;
+import com.github.vtramo.turingmachine.engine.TuringMachine;
 import com.github.vtramo.turingmachine.parser.TuringMachineParserYaml;
 import com.github.vtramo.turingmachine.ui.*;
 import io.github.palexdev.materialfx.controls.MFXCircleToggleNode;
 import io.github.palexdev.materialfx.controls.MFXScrollPane;
 import io.github.palexdev.materialfx.controls.MFXSlider;
+import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,6 +23,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lombok.SneakyThrows;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -31,12 +32,11 @@ import java.util.concurrent.CompletableFuture;
 import static com.github.vtramo.turingmachine.TapeViewController.DELAY_BEFORE_NEXT_MOVE_MS;
 import static com.github.vtramo.turingmachine.ui.BlankSymbolView.blank;
 import static com.github.vtramo.turingmachine.ui.StartSymbolView.startSymbol;
-import static com.github.vtramo.turingmachine.ui.TuringMachineImporterYaml.*;
+import static com.github.vtramo.turingmachine.ui.TuringMachineImporterYaml.TuringMachineImportResult;
 
 public class TuringMachineTabController {
     @FXML
-    private Tab tab;
-
+    private Tab turingMachineTab;
     @FXML
     private Label stateLabel;
     @FXML
@@ -45,14 +45,10 @@ public class TuringMachineTabController {
     private Label spaceLabel;
     @FXML
     private AnchorPane masterAnchorPane;
-
     @FXML
     private VBox tapesVBox;
     @FXML
     private MFXScrollPane tapesScrollPane;
-
-    private TapeViewController tapeViewController;
-
     @FXML
     private MFXCircleToggleNode playButton;
     @FXML
@@ -70,15 +66,18 @@ public class TuringMachineTabController {
     @FXML
     private MFXCircleToggleNode importButton;
     @FXML
+    private MFXCircleToggleNode saveButton;
+    @FXML
     private MFXSlider speedSlider;
     @FXML
     private ConfigurationListView configurationsListView;
-
     @FXML
-    private CodeAreaYaml codeArea;
+    private CodeAreaYaml codeAreaYaml;
     @FXML
     private TuringMachineCompilerView turingMachineCompilerView;
-    private String yamlProgram;
+
+    private TapeViewController tapeViewController;
+    private String turingMachineCode;
     private String input = "";
     private TuringMachine turingMachine;
     private TuringMachine.Computation computation;
@@ -87,13 +86,20 @@ public class TuringMachineTabController {
     private boolean stepInProgress;
     private double speedDelayMs = 500D;
 
+    private final Path turingMachineCodePath;
     private final HomeController homeController;
     private final Stage primaryStage;
 
-    public TuringMachineTabController(final HomeController homeController, final Stage primaryStage, final String yamlProgram) {
+    public TuringMachineTabController(
+        final HomeController homeController,
+        final Stage primaryStage,
+        final String turingMachineCode,
+        final Path turingMachineCodePath
+    ) {
         this.homeController = homeController;
         this.primaryStage = primaryStage;
-        this.yamlProgram = yamlProgram;
+        this.turingMachineCode = turingMachineCode;
+        this.turingMachineCodePath = turingMachineCodePath;
     }
 
     @SneakyThrows
@@ -101,7 +107,7 @@ public class TuringMachineTabController {
         configureButtonOnMouseClickedListeners();
         configureSpeedSlider();
         configureMdtCompiler();
-        configureMdt();
+        configureTuringMachine();
     }
 
     private void configureButtonOnMouseClickedListeners() {
@@ -147,6 +153,29 @@ public class TuringMachineTabController {
         importButton.setOnMouseClicked(__ -> {
             importTuringMachine();
         });
+
+        Platform.runLater(() -> {
+            final TuringMachineArchiver turingMachineArchiver = TuringMachineArchiver.builder()
+                .turingMachineTab(turingMachineTab)
+                .turingMachineCodeSupplier(() -> codeAreaYaml.getText())
+                .stage(primaryStage)
+                .ownerPaneForDialogs(masterAnchorPane)
+                .turingMachineCode(turingMachineCode)
+                .turingMachineCodePath(turingMachineCodePath)
+                .build();
+
+            codeAreaYaml.addTextChangeListener((__, ___, ____) -> {
+                turingMachineArchiver.onTuringMachineCodeChanged();
+            });
+
+            saveButton.setOnMouseClicked(__ -> {
+                turingMachineCode = turingMachineArchiver.saveTuringMachineCode();
+            });
+
+            turingMachineTab.setOnCloseRequest(closeEvent -> {
+                turingMachineArchiver.onTuringMachineTabCloseRequest(closeEvent, turingMachine.getName());
+            });
+        });
     }
 
     private void configureSpeedSlider() {
@@ -157,19 +186,20 @@ public class TuringMachineTabController {
     }
 
     private void configureMdtCompiler() {
-        turingMachineCompilerView.setCodeSupplier(() -> codeArea.getText());
+        turingMachineCompilerView.setCodeSupplier(() -> codeAreaYaml.getText());
         turingMachineCompilerView.addOnSuccessListener(mdt -> {
             this.turingMachine = mdt;
             reset();
         });
     }
 
-    private void configureMdt() throws JsonProcessingException {
+    @SneakyThrows
+    private void configureTuringMachine() {
         final TuringMachineParserYaml turingMachineParserYaml = new TuringMachineParserYaml();
-        turingMachine = turingMachineParserYaml.parse(yamlProgram);
+        turingMachine = turingMachineParserYaml.parse(turingMachineCode);
         computation = turingMachine.startComputation(input);
 
-        codeArea.appendText(yamlProgram);
+        codeAreaYaml.appendText(turingMachineCode);
 
         createTapes();
 
@@ -179,6 +209,28 @@ public class TuringMachineTabController {
         setStepsTextLabel(0);
         setSpaceTextLabel(computation.getSpace());
         setStateTextLabel(turingMachine.getInitialState());
+    }
+
+    private void importTuringMachine() {
+        final TuringMachineImporterYaml turingMachineImporterYaml = new TuringMachineImporterYaml(primaryStage, masterAnchorPane);
+        final Optional<TuringMachineImportResult> optionalTuringMachineImportResult = turingMachineImporterYaml.importTuringMachine();
+        if (optionalTuringMachineImportResult.isEmpty()) return;
+
+        final TuringMachineImportResult turingMachineImportResult = optionalTuringMachineImportResult.get();
+        final TuringMachine importedTuringMachine = turingMachineImportResult.turingMachine();
+        final String importedYamlProgram = turingMachineImportResult.turingMachineCode();
+        turingMachine = importedTuringMachine;
+        turingMachineCode = importedYamlProgram;
+
+        if (turingMachineImportResult.openNewWindow()) {
+            final String turingMachineName = turingMachine.getName();
+            final Path turingMachineYamlProgramPath = turingMachineImportResult.turingMachineCodePath();
+            homeController.createTuringMachineTab(turingMachineName, turingMachineCode, turingMachineYamlProgramPath);
+        } else {
+            codeAreaYaml.setText(turingMachineCode);
+            reset();
+        }
+
     }
 
     private void createTapes() {
@@ -195,27 +247,6 @@ public class TuringMachineTabController {
         tapesVBox.getChildren().addAll(tapeViews);
         tapesScrollPane.setFitToHeight(tapes <= 6);
         tapeViewController = new TapeViewController(tapeViews);
-    }
-
-    private void importTuringMachine() {
-        final TuringMachineImporterYaml turingMachineImporterYaml = new TuringMachineImporterYaml(primaryStage, masterAnchorPane);
-        final Optional<TuringMachineImportResult> optionalTuringMachineImportResult = turingMachineImporterYaml.importTuringMachineFromYamlDefinition();
-        if (optionalTuringMachineImportResult.isEmpty()) return;
-
-        final TuringMachineImportResult turingMachineImportResult = optionalTuringMachineImportResult.get();
-        final TuringMachine importedTuringMachine = turingMachineImportResult.turingMachine();
-        final String importedYamlProgram = turingMachineImportResult.yamlProgram();
-        turingMachine = importedTuringMachine;
-        yamlProgram = importedYamlProgram;
-
-        if (turingMachineImportResult.openNewWindow()) {
-            final String turingMachineName = turingMachine.getName();
-            homeController.createTuringMachineTab(turingMachineName, yamlProgram);
-        } else {
-            codeArea.setText(yamlProgram);
-            reset();
-        }
-
     }
 
     private void play() {

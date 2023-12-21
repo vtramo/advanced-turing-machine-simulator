@@ -18,7 +18,8 @@ import java.nio.file.Path;
 
 public class HomeController {
     private static final String MDT_TAB_TEMPLATE_FXML = "turing-machine-tab-template.fxml";
-    private static final Path MDT_PALINDROME_PATH = Path.of("src/main/resources/mdt-palindrome-six-tapes.yaml");
+    private static final Path MDT_HELLO_WORLD_PATH = Path.of("src/main/resources/mdt-hello-world.yaml");
+    private static final String MDT_HELLO_WORLD_NAME = "Hello World";
 
     @FXML
     private TabPane tabPane;
@@ -34,7 +35,7 @@ public class HomeController {
     @SneakyThrows
     public void initialize() {
         addListenerToNewTuringMachineTabButton();
-        createTuringMachineTab("Palindrome", MDT_PALINDROME_PATH);
+        createHelloWorldTuringMachineTab();
     }
 
     private void addListenerToNewTuringMachineTabButton() {
@@ -43,7 +44,7 @@ public class HomeController {
         readOnlyObjectPropertyTab.addListener((__, ___, newSelectedTab) -> {
             if (newSelectedTab != addTabButton) return;
             final String turingMachineTabTitle = buildNextTuringMachineTabTitle();
-            createTuringMachineTab(turingMachineTabTitle, MDT_PALINDROME_PATH);
+            createHelloWorldTuringMachineTab();
         });
     }
 
@@ -53,28 +54,43 @@ public class HomeController {
     }
 
     @SneakyThrows
-    public Tab createTuringMachineTab(final String title, final Path yamlProgramPath) {
-        final String yamlProgram = readTuringMachineYamlDefinition(yamlProgramPath);
-        return createTuringMachineTab(title, yamlProgram);
+    public Tab createTuringMachineTab(final String title, final Path turingMachineYamlProgramPath) {
+        final String turingMachineYamlProgram = readTuringMachineYamlDefinition(turingMachineYamlProgramPath);
+        return createTuringMachineTab(title, turingMachineYamlProgram, turingMachineYamlProgramPath);
     }
 
-    public Tab createTuringMachineTab(final String title, final String yamlProgram) {
+    private Tab createHelloWorldTuringMachineTab() {
+        final String turingMachineYamlProgram = readTuringMachineYamlDefinition(MDT_HELLO_WORLD_PATH);
+        return createTuringMachineTab(MDT_HELLO_WORLD_NAME, turingMachineYamlProgram);
+    }
+
+    private Tab createTuringMachineTab(final String title, final String turingMachineYamlProgram) {
+        return createTuringMachineTab(title, turingMachineYamlProgram, null);
+    }
+
+    public Tab createTuringMachineTab(final String title, final String turingMachineYamlProgram, final Path turingMachineYamlProgramPath) {
         try {
             final FXMLLoader fxmlLoader = new FXMLLoader(TuringMachineApplication.class.getResource(MDT_TAB_TEMPLATE_FXML));
-            fxmlLoader.setController(new TuringMachineTabController(this, primaryStage, yamlProgram));
+            final TuringMachineTabController turingMachineTabController = new TuringMachineTabController(
+                this, primaryStage,
+                turingMachineYamlProgram, turingMachineYamlProgramPath
+            );
+            fxmlLoader.setController(turingMachineTabController);
+
             final Tab tab = fxmlLoader.load();
             tab.setText(title);
             setTabClosablePolicy(tab);
             addTab(tab);
             selectTab(tab);
+
             return tab;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static String readTuringMachineYamlDefinition(final Path programYamlPath) {
-        try (final FileInputStream fileInputStream = new FileInputStream(programYamlPath.toFile())) {
+    private static String readTuringMachineYamlDefinition(final Path turingMachineYamlProgram) {
+        try (final FileInputStream fileInputStream = new FileInputStream(turingMachineYamlProgram.toFile())) {
             return new String(fileInputStream.readAllBytes());
         } catch (IOException e) {
             throw new RuntimeException(e);

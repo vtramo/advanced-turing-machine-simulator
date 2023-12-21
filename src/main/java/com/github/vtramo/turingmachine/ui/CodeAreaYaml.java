@@ -4,6 +4,7 @@ import com.github.vtramo.turingmachine.parser.TuringMachineValidatorYaml;
 import com.github.vtramo.turingmachine.parser.ValidationMessage;
 import com.github.vtramo.turingmachine.parser.ValidationResult;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
@@ -97,9 +98,13 @@ public class CodeAreaYaml extends VirtualizedScrollPane<CodeArea> {
         codeArea.requestFollowCaret();
     }
 
-    private void addTextChangeListener() {
+    public void addTextChangeListener(final ChangeListener<String> changeListener) {
         final ObservableValue<String> stringObservableValue = codeArea.textProperty();
-        stringObservableValue.addListener((observable, oldText, newText) -> {
+        stringObservableValue.addListener(changeListener);
+    }
+
+    private void addTextChangeListener() {
+        addTextChangeListener((observable, oldText, newText) -> {
             errorMessageByCharacterIndex.clear();
             codeArea.setStyleSpans(0, computeHighlighting(newText));
             executorService.schedule(() ->

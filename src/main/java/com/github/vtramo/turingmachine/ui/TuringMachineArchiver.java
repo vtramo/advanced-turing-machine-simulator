@@ -17,58 +17,64 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class TuringMachineArchiver {
-
     private final Stage stage;
     private final Pane ownerPaneForDialogs;
     private final Tab turingMachineTab;
-    private final CodeAreaYaml codeAreaYaml;
-    private Path turingMachineYamlProgramPath;
-    private String turingMachineYamlProgram;
+    private final Supplier<String> turingMachineCodeSupplier;
+    private Path turingMachineCodePath;
+    private String turingMachineCode;
     private boolean isTuringMachineCodeChangedLastTime;
+    private boolean isTuringMachineStored;
 
     @Builder
     public TuringMachineArchiver(
         final Stage stage,
         final Pane ownerPaneForDialogs,
         final Tab turingMachineTab,
-        final CodeAreaYaml codeAreaYaml,
-        final String turingMachineYamlProgram,
-        final Path turingMachineYamlProgramPath
+        final Supplier<String> turingMachineCodeSupplier,
+        final String turingMachineCode,
+        final Path turingMachineCodePath
     ) {
         this.stage = stage;
         this.ownerPaneForDialogs = ownerPaneForDialogs;
         this.turingMachineTab = turingMachineTab;
-        this.codeAreaYaml = codeAreaYaml;
-        this.turingMachineYamlProgram = turingMachineYamlProgram;
-        this.turingMachineYamlProgramPath = turingMachineYamlProgramPath;
+        this.turingMachineCodeSupplier = turingMachineCodeSupplier;
+        this.turingMachineCode = turingMachineCode;
+        this.turingMachineCodePath = turingMachineCodePath;
+        this.isTuringMachineStored = (turingMachineCodePath != null);
+        onTuringMachineCodeChanged();
     }
 
     public boolean isTuringMachineCodeChanged() {
-        final int yamlProgramChecksum = turingMachineYamlProgram.hashCode();
-        final int codeAreaYamlChecksum = codeAreaYaml.getText().hashCode();
+        final int yamlProgramChecksum = turingMachineCode.trim().hashCode();
+        final int codeAreaYamlChecksum = turingMachineCodeSupplier.get().trim().hashCode();
         return yamlProgramChecksum != codeAreaYamlChecksum;
     }
 
     public String saveTuringMachineCode() {
-        if (!isTuringMachineCodeChanged()) return turingMachineYamlProgram;
-
-        try {
-            final String turingMachineYamlProgram = codeAreaYaml.getText();
-            Files.write(turingMachineYamlProgramPath, turingMachineYamlProgram.getBytes());
-            removeAsteriskToTuringMachineTabTitle();
-            this.turingMachineYamlProgram = turingMachineYamlProgram;
-            isTuringMachineCodeChangedLastTime = false;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if (!isExistingTuringMachineProgram()) {
+            showTuringMachineSaveAsDialog();
+        } else {
+            if (!isTuringMachineCodeChanged()) return turingMachineCode;
+            try {
+                this.turingMachineCode = turingMachineCodeSupplier.get();
+                Files.write(turingMachineCodePath, turingMachineCode.getBytes());
+                removeAsteriskToTuringMachineTabTitle();
+                isTuringMachineCodeChangedLastTime = false;
+                isTuringMachineStored = true;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
-        return turingMachineYamlProgram;
+        return turingMachineCode;
     }
 
     public void onTuringMachineCodeChanged() {
-        if (isTuringMachineCodeChanged()) {
+        if (!isTuringMachineStored || isTuringMachineCodeChanged()) {
             if (!isTuringMachineCodeChangedLastTime) {
                 addAsteriskToTuringMachineTabTitle();
             }
@@ -97,7 +103,7 @@ public class TuringMachineArchiver {
         if (!isTuringMachineCodeChangedLastTime) return ;
 
         final MFXGenericDialog dialogContent = buildCloseRequestWarningDialogContent(turingMachineName);
-        final MFXStageDialog dialog = buildCloseRequestWarningDialog(dialogContent);
+        final MFXStageDialog dialog = buildStageDialog(dialogContent);
 
         dialogContent.addActions(Map.entry(new MFXButton("Close without saving"), ___ -> {
             dialog.close();
@@ -113,13 +119,13 @@ public class TuringMachineArchiver {
             dialog.close();
         });
 
-        final String saveAsButtonText = (turingMachineYamlProgramPath == null) ? "Save as..." : "Save";
+        final String saveAsButtonText = (!isExistingTuringMachineProgram()) ? "Save as..." : "Save";
         final MFXButton saveAsButton = new MFXButton(saveAsButtonText);
         dialogContent.addActions(Map.entry(saveAsButton, ___ -> {
             if (isExistingTuringMachineProgram()) {
                 saveTuringMachineCode();
             } else {
-
+                showTuringMachineSaveAsDialog();
             }
 
             dialog.close();
@@ -128,11 +134,29 @@ public class TuringMachineArchiver {
         dialog.showAndWait();
     }
 
-    private boolean isExistingTuringMachineProgram() {
-        return turingMachineYamlProgramPath != null;
+    private void showTuringMachineSaveAsDialog() {
+        final TuringMachineSaveAsDialog turingMachineSaveAsDialog = TuringMachineSaveAsDialog.builder()
+            .turingMachineCode(turingMachineCode)
+            .stage(stage)
+            .ownerPaneForDialogs(ownerPaneForDialogs)
+            .addOnTuringMachineCodeSavedListener(turingMachineCodePath -> {
+                this.turingMachineCodePath = turingMachineCodePath;
+                isTuringMachineStored = true;
+                removeAsteriskToTuringMachineTabTitle();
+            })
+            .build();
+
+        turingMachineSaveAsDialog.show();
     }
 
-    private MFXStageDialog buildCloseRequestWarningDialog(MFXGenericDialog dialogContent) {
+    private boolean isExistingTuringMachineProgram() {
+        if (turingMachineCodePath == null) return false;
+        if (Files.exists(turingMachineCodePath)) return true;
+        addAsteriskToTuringMachineTabTitle();
+        return false;
+    }
+
+    private MFXStageDialog buildStageDialog(MFXGenericDialog dialogContent) {
         final MFXStageDialog dialog = MFXGenericDialogBuilder.build(dialogContent)
             .toStageDialogBuilder()
             .initOwner(stage)
@@ -145,7 +169,7 @@ public class TuringMachineArchiver {
         return dialog;
     }
 
-    private static MFXGenericDialog buildCloseRequestWarningDialogContent(String turingMachineName) {
+    private static MFXGenericDialog buildCloseRequestWarningDialogContent(final String turingMachineName) {
         final MFXGenericDialog dialogContent = MFXGenericDialogBuilder.build()
             .makeScrollable(true)
             .get();

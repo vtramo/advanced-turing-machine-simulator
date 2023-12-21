@@ -1,0 +1,35 @@
+@import 'Common.css';
+@import 'MFXColors.css';
+
+.mfx-dialog .header-label {
+    -fx-font-family: "Source Code Pro Medium";
+    -fx-font-size: 14;
+    -fx-text-fill: -mfx-charcoal;
+    -fx-graphic-text-gap: 10;
+}
+
+.mfx-info-dialog-standard .header-label .mfx-font-icon {
+    -mfx-color: -mfx-charcoal;
+    -fx-font-family: "Source Code Pro Medium";
+    -fx-text-fill: -mfx-charcoal;
+}
+
+.mfx-info-dialog-standard .actions-pane .mfx-button {
+    -fx-text-fill: derive(-mfx-charcoal, -20%);
+    -fx-font-family: "Source Code Pro Medium";
+}
+
+.mfx-info-dialog-standard .actions-pane .mfx-button .mfx-ripple-generator {
+    -mfx-ripple-color: derive(-mfx-charcoal, 80%);
+    -fx-font-family: "Source Code Pro Medium";
+    -fx-text-fill: -mfx-charcoal;
+}
+
+.mfx-info-dialog-standard .actions-pane .mfx-button:hover {
+    -fx-background-color: derive(-mfx-charcoal, 110%);
+}
+
+#text {
+    -fx-font-family: "Source Code Pro Medium";
+    -fx-text-fill: -mfx-charcoal;
+}

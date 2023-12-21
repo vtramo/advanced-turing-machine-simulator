@@ -13,7 +13,6 @@ import io.github.palexdev.materialfx.enums.ScrimPriority;
 import io.github.palexdev.mfxresources.fonts.MFXFontIcon;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.Pane;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -21,6 +20,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -30,7 +30,13 @@ public class TuringMachineImporterYaml {
     private static final TuringMachineParserYaml turingMachineParserYaml = new TuringMachineParserYaml();
     private static final FileChooser fileChooser = new FileChooser();
 
-    public record TuringMachineImportResult(TuringMachine turingMachine, String yamlProgram, boolean openNewWindow) {}
+    public record TuringMachineImportResult(
+        TuringMachine turingMachine,
+        String turingMachineCode,
+        Path turingMachineCodePath,
+        boolean openNewWindow
+    ) {}
+
     private enum OpenNewWindowDialogResult { THIS_WINDOW, NEW_WINDOW, CANCEL }
 
     private MFXStageDialog dialog;
@@ -51,21 +57,21 @@ public class TuringMachineImporterYaml {
         extensionFilters.add(new FileChooser.ExtensionFilter("YAML Files", "*.yaml"));
     }
 
-    public Optional<TuringMachineImportResult> importTuringMachineFromYamlDefinition() {
+    public Optional<TuringMachineImportResult> importTuringMachine() {
         final Optional<File> optionalFile = Optional.ofNullable(fileChooser.showOpenDialog(stage));
         if (optionalFile.isEmpty()) return Optional.empty();
 
         final File file = optionalFile.get();
-        final String yamlProgram = readProgram(file);
+        final String turingMachineCodeYaml = readTuringMachineProgram(file);
         initializeDialog();
 
-        final ValidationResult validationResult = turingMachineValidatorYaml.validate(yamlProgram);
+        final ValidationResult validationResult = turingMachineValidatorYaml.validate(turingMachineCodeYaml);
         if (validationResult.containsErrors()) {
             showBadTuringMachineYamlDefinitionDialog();
             return Optional.empty();
         }
 
-        final TuringMachine turingMachine = parseTuringMachineYamlDefinition(yamlProgram);
+        final TuringMachine turingMachine = parseTuringMachineYamlDefinition(turingMachineCodeYaml);
         final String turingMachineName = turingMachine.getName();
 
         final OpenNewWindowDialogResult openNewWindowDialogResult = askForOpenNewWindow(turingMachineName);
@@ -74,7 +80,12 @@ public class TuringMachineImporterYaml {
         }
 
         final boolean openNewWindow = Objects.equals(OpenNewWindowDialogResult.NEW_WINDOW, openNewWindowDialogResult);
-        return Optional.of(new TuringMachineImportResult(turingMachine, yamlProgram, openNewWindow));
+        final Path turingMachineCodePath = Path.of(file.getAbsolutePath());
+        return Optional.of(new TuringMachineImportResult(
+            turingMachine,
+            turingMachineCodeYaml,
+            turingMachineCodePath,
+            openNewWindow));
     }
 
     private void showBadTuringMachineYamlDefinitionDialog() {
@@ -87,7 +98,7 @@ public class TuringMachineImporterYaml {
         dialog.show();
     }
 
-    private String readProgram(final File file) {
+    private String readTuringMachineProgram(final File file) {
         try (final FileInputStream fileInputStream = new FileInputStream(file)) {
             return new String(fileInputStream.readAllBytes());
         } catch (IOException e) {
