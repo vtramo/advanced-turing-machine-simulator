@@ -232,6 +232,7 @@ public class TuringMachineTabController {
             reset();
         }
 
+        turingMachineTab.setText(importedTuringMachine.getName());
     }
 
     private void createTapes() {
