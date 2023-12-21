@@ -8,6 +8,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Popup;
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.Caret;
@@ -66,6 +68,45 @@ public class CodeAreaYaml extends VirtualizedScrollPane<CodeArea> {
         heightProperty()
             .addListener(__
                 -> addPaddingLines());
+
+        addKeyPressedEventFilters();
+    }
+
+    private void addKeyPressedEventFilters() {
+        codeArea.addEventFilter(KeyEvent.KEY_PRESSED,
+            keyEvent -> {
+                if (keyEvent.getCode() == KeyCode.ENTER) {
+                    final int currentParagraphIndex = codeArea.getCurrentParagraph();
+                    final var currentParagraph = codeArea.getParagraph(currentParagraphIndex);
+                    final String currentParagraphText = currentParagraph.getText();
+
+                    final String indentationString = computeIndentationString(currentParagraphText);
+
+                    codeArea.insertText(codeArea.getCaretPosition(), indentationString);
+                    codeArea.requestFollowCaret();
+                    keyEvent.consume();
+                    return;
+                }
+
+                if (keyEvent.getCode() == KeyCode.TAB) {
+                    codeArea.insertText(codeArea.getCaretPosition(), "  ");
+                    keyEvent.consume();
+                }
+            }
+        );
+    }
+
+    private static String computeIndentationString(final String text) {
+        final StringBuilder indentationStringBuilder = new StringBuilder("\n");
+        for (int i = 0; i < text.length(); i++) {
+            final char symbol = text.charAt(i);
+            if (Character.isSpaceChar(symbol)) {
+                indentationStringBuilder.append(symbol);
+            } else {
+                break;
+            }
+        }
+        return indentationStringBuilder.toString();
     }
 
     public void appendText(final String text) {
