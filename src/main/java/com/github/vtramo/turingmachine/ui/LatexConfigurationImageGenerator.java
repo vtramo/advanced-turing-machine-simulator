@@ -22,7 +22,7 @@ public class LatexConfigurationImageGenerator {
 
     public Image generateLatexImage(final Configuration configuration) {
         final String latexFormula = buildLatexFormula(configuration);
-        latexFormulaPNGGenerator.generate(latexFormula, 18, DESTINATION_PATH);
+        latexFormulaPNGGenerator.generate(latexFormula, 22, DESTINATION_PATH);
         try {
             return new Image(new FileInputStream(DESTINATION_PATH));
         } catch (FileNotFoundException e) {
@@ -51,6 +51,8 @@ public class LatexConfigurationImageGenerator {
                 latexFormula.append(specialSymbolLatexFormula.get(Symbol.START));
             } else if (Objects.equals(Symbol.BLANK.getSymbol(), symbol)) {
                 latexFormula.append(specialSymbolLatexFormula.get(Symbol.BLANK));
+            } else if (Character.isAlphabetic(symbol)) {
+                latexFormula.append(STR."\\text{\{symbol}}");
             } else {
                 latexFormula.append(symbol);
             }
