@@ -12,7 +12,10 @@ import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.*;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -23,8 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-
-import static java.lang.StringTemplate.STR;
 
 public class TuringMachineCompilerView extends GridPane {
     public static final String COMPILE_BUTTON_STYLE_CLASS = "standard-button";
@@ -156,7 +157,7 @@ public class TuringMachineCompilerView extends GridPane {
         """;
     }
 
-    private void clearLogs() {
+    public void clearLogs() {
         scrollPane.setContent(null);
     }
 }

@@ -228,6 +228,7 @@ public class TuringMachineTabController {
             homeController.createTuringMachineTab(turingMachineName, turingMachineCode, turingMachineYamlProgramPath);
         } else {
             codeAreaYaml.setText(turingMachineCode);
+            turingMachineCompilerView.clearLogs();
             reset();
         }
 
