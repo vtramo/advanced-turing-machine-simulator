@@ -41,6 +41,23 @@
 	-fx-border-color: -mfx-charcoal;
 	-fx-text-fill: white;
 }
+
+#changeDirButton {
+	-fx-background-color: -mfx-charcoal;
+	-fx-border-radius: 0;
+	-fx-border-insets: 0;
+	-fx-border-color: -mfx-charcoal;
+	-fx-text-fill: white;
+}
+
+#notificationButton {
+	-fx-background-color: -mfx-charcoal;
+    -fx-border-radius: 0;
+    -fx-border-insets: 0;
+    -fx-border-color: -mfx-charcoal;
+    -fx-text-fill: white;
+}
+
 .outline-button {
 	-fx-background-color: transparent;
 	-fx-border-color: -mfx-purple;

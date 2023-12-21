@@ -24,11 +24,31 @@
 **************************************************/
 .mfx-text-field {
 	-fx-min-width: 130;
-	-fx-font-family: 'Open Sans SemiBold';
+	-fx-font-family: 'Source Code Pro Medium';
+	-fx-border-radius: 0;
 }
 
 .mfx-text-field .floating-text {
-	-fx-font-family: 'Open Sans SemiBold';
+	-fx-font-family: 'Source Code Pro Medium';
+	-fx-text-fill: -mfx-charcoal;
+}
+
+#saveAsDialogTextField {
+	-fx-font-family: 'Source Code Pro Medium';
+	-fx-text-fill: -mfx-charcoal;
+	-fx-border-color: -mfx-charcoal;
+}
+
+#saveAsDialogTextField:invalid {
+	-fx-border-color: -mfx-red;
+}
+
+#saveAsDialogTextField:invalid .floating-text {
+	-fx-text-fill: -mfx-red;
+}
+
+#saveAsDialogTextField:invalid .mfx-font-icon {
+	-mfx-color: -mfx-red;
 }
 
 
