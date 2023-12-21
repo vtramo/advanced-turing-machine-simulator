@@ -1,4 +1,4 @@
-package com.github.vtramo.turingmachine.ui;
+package com.github.vtramo.turingmachine.ui.dialogs;
 
 import com.github.vtramo.turingmachine.TuringMachineApplication;
 import io.github.palexdev.materialfx.controls.MFXButton;

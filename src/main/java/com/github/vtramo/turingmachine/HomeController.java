@@ -12,9 +12,10 @@ import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 import lombok.SneakyThrows;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
+
+import static com.github.vtramo.turingmachine.parser.TuringMachineYamlUtils.readTuringMachineYamlDefinition;
 
 public class HomeController {
     private static final String MDT_TAB_TEMPLATE_FXML = "turing-machine-tab-template.fxml";
@@ -84,14 +85,6 @@ public class HomeController {
             selectTab(tab);
 
             return tab;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static String readTuringMachineYamlDefinition(final Path turingMachineYamlProgram) {
-        try (final FileInputStream fileInputStream = new FileInputStream(turingMachineYamlProgram.toFile())) {
-            return new String(fileInputStream.readAllBytes());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -1,7 +1,9 @@
-package com.github.vtramo.turingmachine.ui;
+package com.github.vtramo.turingmachine.ui.dialogs;
 
 import com.github.vtramo.turingmachine.TuringMachineApplication;
 import com.github.vtramo.turingmachine.engine.TerminalState;
+import com.github.vtramo.turingmachine.ui.CursorView;
+import com.github.vtramo.turingmachine.ui.TapeView;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXScrollPane;
 import io.github.palexdev.materialfx.dialogs.MFXGenericDialog;
@@ -31,7 +33,7 @@ import static com.github.vtramo.turingmachine.engine.TerminalState.ACCEPTING_STA
 import static com.github.vtramo.turingmachine.engine.TerminalState.REJECTING_STATE;
 import static com.github.vtramo.turingmachine.ui.TapeView.CELL_WIDTH;
 
-public class TuringMachineHaltedStateDialogView {
+public class TuringMachineHaltedStateDialog {
     private static final String MDT_DECIDING_STATE_FXML = "turing-machine-deciding-state-dialog.fxml";
     private static final String MDT_HALTING_STATE_DIALOG_FXML = "turing-machine-halting-state-dialog.fxml";
     private static final double DIALOG_WIDTH = 960;
@@ -63,7 +65,7 @@ public class TuringMachineHaltedStateDialogView {
     private final Pane ownerNode;
     private MFXStageDialog dialog;
 
-    public TuringMachineHaltedStateDialogView(
+    public TuringMachineHaltedStateDialog(
         final TerminalState terminalState,
         final Stage owner,
         final Pane ownerNode,
@@ -77,7 +79,7 @@ public class TuringMachineHaltedStateDialogView {
         addTapeIn(outputTapeAnchorPaneContent, output);
     }
 
-    public TuringMachineHaltedStateDialogView(
+    public TuringMachineHaltedStateDialog(
         final TerminalState terminalState,
         final Stage owner,
         final Pane ownerNode,

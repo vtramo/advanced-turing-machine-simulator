@@ -1,8 +1,8 @@
-package com.github.vtramo.turingmachine.ui;
+package com.github.vtramo.turingmachine.ui.dialogs;
 
+import com.github.vtramo.turingmachine.engine.TerminalState;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import com.github.vtramo.turingmachine.engine.TerminalState;
 
 public class TuringMachineHaltedDialogBuilder {
     private TerminalState terminalState;
@@ -48,11 +48,11 @@ public class TuringMachineHaltedDialogBuilder {
         return this;
     }
 
-    public TuringMachineHaltedStateDialogView build() {
+    public TuringMachineHaltedStateDialog build() {
         if (output == null) {
-            return new TuringMachineHaltedStateDialogView(terminalState, owner, ownerNode, input, totalSteps, totalSpace);
+            return new TuringMachineHaltedStateDialog(terminalState, owner, ownerNode, input, totalSteps, totalSpace);
         } else {
-            return new TuringMachineHaltedStateDialogView(terminalState, owner, ownerNode, input, output, totalSteps, totalSpace);
+            return new TuringMachineHaltedStateDialog(terminalState, owner, ownerNode, input, output, totalSteps, totalSpace);
         }
     }
 }

@@ -1,14 +1,17 @@
 package com.github.vtramo.turingmachine;
 
-import com.github.vtramo.turingmachine.engine.Configuration;
-import com.github.vtramo.turingmachine.engine.TerminalState;
-import com.github.vtramo.turingmachine.engine.Transition;
-import com.github.vtramo.turingmachine.engine.TuringMachine;
+import com.github.vtramo.turingmachine.engine.*;
 import com.github.vtramo.turingmachine.parser.TuringMachineParserYaml;
 import com.github.vtramo.turingmachine.ui.*;
+import com.github.vtramo.turingmachine.ui.dialogs.TuringMachineHaltedDialogBuilder;
+import com.github.vtramo.turingmachine.ui.dialogs.TuringMachineHaltedStateDialog;
+import com.github.vtramo.turingmachine.ui.dialogs.TuringMachineImportDialog;
 import io.github.palexdev.materialfx.controls.MFXCircleToggleNode;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXScrollPane;
 import io.github.palexdev.materialfx.controls.MFXSlider;
+import io.github.palexdev.materialfx.utils.StringUtils;
+import io.github.palexdev.materialfx.utils.others.FunctionalStringConverter;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.collections.FXCollections;
@@ -21,6 +24,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import lombok.SneakyThrows;
 
 import java.nio.file.Path;
@@ -28,11 +32,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static com.github.vtramo.turingmachine.TapeViewController.DELAY_BEFORE_NEXT_MOVE_MS;
 import static com.github.vtramo.turingmachine.ui.BlankSymbolView.blank;
 import static com.github.vtramo.turingmachine.ui.StartSymbolView.startSymbol;
 import static com.github.vtramo.turingmachine.ui.TuringMachineImporterYaml.TuringMachineImportResult;
+import static com.github.vtramo.turingmachine.ui.dialogs.TuringMachineImportDialog.OpenNewWindowDialogResult;
 
 public class TuringMachineTabController {
     @FXML
@@ -75,6 +82,8 @@ public class TuringMachineTabController {
     private CodeAreaYaml codeAreaYaml;
     @FXML
     private TuringMachineCompilerView turingMachineCompilerView;
+    @FXML
+    private MFXFilterComboBox<TuringMachineStoredProgram> turingMachineExamplesFilterCombo;
 
     private TapeViewController tapeViewController;
     private String turingMachineCode;
@@ -108,6 +117,53 @@ public class TuringMachineTabController {
         configureSpeedSlider();
         configureMdtCompiler();
         configureTuringMachine();
+        configureTuringMachineExamplesFilterCombo();
+    }
+
+    private void configureTuringMachineExamplesFilterCombo() {
+        final ObservableList<TuringMachineStoredProgram> turingMachineStoredPrograms =
+            FXCollections.observableArrayList(TuringMachineStoredProgram.turingMachineStoredPrograms);
+
+        final StringConverter<TuringMachineStoredProgram> converter =
+            FunctionalStringConverter.to(turingMachineStoredProgram ->
+                (turingMachineStoredProgram == null)
+                        ? ""
+                        : turingMachineStoredProgram.name());
+
+        final Function<String, Predicate<TuringMachineStoredProgram>> filterFunction =
+            turingMachineName ->
+                turingMachineStoredProgram ->
+                    StringUtils.containsIgnoreCase(
+                        converter.toString(turingMachineStoredProgram),
+                        turingMachineName);
+
+        turingMachineExamplesFilterCombo.setItems(turingMachineStoredPrograms);
+        turingMachineExamplesFilterCombo.setConverter(converter);
+        turingMachineExamplesFilterCombo.setFilterFunction(filterFunction);
+
+        turingMachineExamplesFilterCombo
+            .selectedItemProperty()
+            .addListener(__ -> {
+                onTuringMachineExampleSelected();
+            });
+    }
+
+    private void onTuringMachineExampleSelected() {
+        final TuringMachineStoredProgram turingMachineStoredProgram = turingMachineExamplesFilterCombo.getSelectedItem();
+        final TuringMachineImportDialog turingMachineImportDialog = new TuringMachineImportDialog(primaryStage, masterAnchorPane);
+        final String turingMachineName = turingMachineStoredProgram.name();
+        final OpenNewWindowDialogResult openNewWindowDialogResult = turingMachineImportDialog.askToOpenNewWindow(turingMachineName);
+
+        switch (openNewWindowDialogResult) {
+            case NEW_WINDOW ->
+                homeController.createTuringMachineTab(
+                    turingMachineName,
+                    turingMachineStoredProgram.turingMachineCode(),
+                    turingMachineStoredProgram.turingMachineCodePath()
+                );
+            case THIS_WINDOW -> changeTuringMachineOnThisTab(turingMachine);
+            case CANCEL -> {}
+        }
     }
 
     private void configureButtonOnMouseClickedListeners() {
@@ -227,12 +283,20 @@ public class TuringMachineTabController {
             final Path turingMachineYamlProgramPath = turingMachineImportResult.turingMachineCodePath();
             homeController.createTuringMachineTab(turingMachineName, turingMachineCode, turingMachineYamlProgramPath);
         } else {
-            codeAreaYaml.setText(turingMachineCode);
-            turingMachineCompilerView.clearLogs();
-            reset();
+            changeTuringMachineOnThisTab(importedTuringMachine);
         }
 
+    }
+
+    private void changeTuringMachineOnThisTab(TuringMachine importedTuringMachine) {
+        codeAreaYaml.setText(turingMachineCode);
+        turingMachineCompilerView.clearLogs();
+        reset();
         turingMachineTab.setText(importedTuringMachine.getName());
+    }
+
+    private void importTuringMachine(final TuringMachineStoredProgram turingMachineStoredProgram) {
+
     }
 
     private void createTapes() {
@@ -275,7 +339,7 @@ public class TuringMachineTabController {
 
         final TerminalState terminalState = determineTerminalState();
         final TuringMachineHaltedDialogBuilder turingMachineHaltedDialogBuilder =
-            TuringMachineHaltedStateDialogView.builder()
+            TuringMachineHaltedStateDialog.builder()
                 .withInput(input)
                 .withTerminalState(terminalState)
                 .withOwner(primaryStage)
@@ -287,7 +351,7 @@ public class TuringMachineTabController {
             turingMachineHaltedDialogBuilder.withOutput(computation.getOutput());
         }
 
-        final TuringMachineHaltedStateDialogView machineHaltedDialog = turingMachineHaltedDialogBuilder.build();
+        final TuringMachineHaltedStateDialog machineHaltedDialog = turingMachineHaltedDialogBuilder.build();
         machineHaltedDialog.show();
     }
 

@@ -5,17 +5,17 @@ import com.github.vtramo.turingmachine.engine.TuringMachine;
 import com.github.vtramo.turingmachine.parser.TuringMachineParserYaml;
 import com.github.vtramo.turingmachine.parser.TuringMachineValidatorYaml;
 import com.github.vtramo.turingmachine.parser.ValidationResult;
+import com.github.vtramo.turingmachine.ui.dialogs.TuringMachineDialogUtils;
+import com.github.vtramo.turingmachine.ui.dialogs.TuringMachineImportDialog;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.dialogs.MFXGenericDialog;
-import io.github.palexdev.materialfx.dialogs.MFXGenericDialogBuilder;
 import io.github.palexdev.materialfx.dialogs.MFXStageDialog;
-import io.github.palexdev.materialfx.enums.ScrimPriority;
 import io.github.palexdev.mfxresources.fonts.MFXFontIcon;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,6 +24,8 @@ import java.nio.file.Path;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+
+import static com.github.vtramo.turingmachine.ui.dialogs.TuringMachineImportDialog.OpenNewWindowDialogResult;
 
 public class TuringMachineImporterYaml {
     private static final TuringMachineValidatorYaml turingMachineValidatorYaml = new TuringMachineValidatorYaml();
@@ -36,8 +38,6 @@ public class TuringMachineImporterYaml {
         Path turingMachineCodePath,
         boolean openNewWindow
     ) {}
-
-    private enum OpenNewWindowDialogResult { THIS_WINDOW, NEW_WINDOW, CANCEL }
 
     private MFXStageDialog dialog;
     private MFXGenericDialog dialogContent;
@@ -63,7 +63,8 @@ public class TuringMachineImporterYaml {
 
         final File file = optionalFile.get();
         final String turingMachineCodeYaml = readTuringMachineProgram(file);
-        initializeDialog();
+
+        initializeMFXDialog();
 
         final ValidationResult validationResult = turingMachineValidatorYaml.validate(turingMachineCodeYaml);
         if (validationResult.containsErrors()) {
@@ -74,7 +75,8 @@ public class TuringMachineImporterYaml {
         final TuringMachine turingMachine = parseTuringMachineYamlDefinition(turingMachineCodeYaml);
         final String turingMachineName = turingMachine.getName();
 
-        final OpenNewWindowDialogResult openNewWindowDialogResult = askForOpenNewWindow(turingMachineName);
+        final TuringMachineImportDialog turingMachineImportDialog = new TuringMachineImportDialog(stage, ownerPaneForDialogs);
+        final OpenNewWindowDialogResult openNewWindowDialogResult = turingMachineImportDialog.askToOpenNewWindow(turingMachineName);
         if (Objects.equals(openNewWindowDialogResult, OpenNewWindowDialogResult.CANCEL)) {
             return Optional.empty();
         }
@@ -86,6 +88,13 @@ public class TuringMachineImporterYaml {
             turingMachineCodeYaml,
             turingMachineCodePath,
             openNewWindow));
+    }
+
+    private void initializeMFXDialog() {
+        final Pair<MFXStageDialog, MFXGenericDialog> mfxStageDialogMFXGenericDialogPair =
+            TuringMachineDialogUtils.buildMFXDialog(stage, ownerPaneForDialogs);
+        this.dialog = mfxStageDialogMFXGenericDialogPair.getKey();
+        this.dialogContent = mfxStageDialogMFXGenericDialogPair.getValue();
     }
 
     private void showBadTuringMachineYamlDefinitionDialog() {
@@ -104,55 +113,6 @@ public class TuringMachineImporterYaml {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private OpenNewWindowDialogResult askForOpenNewWindow(final String turingMachineName) {
-        final OpenNewWindowDialogResult[] openNewWindowDialogResult = new OpenNewWindowDialogResult[1];
-        final MFXFontIcon infoIcon = new MFXFontIcon("fas-circle-question", 18);
-        dialogContent.setHeaderIcon(infoIcon);
-        dialogContent.setContentText(STR."Where would you like to open the Turing machine '\{turingMachineName}'?");
-
-        dialogContent.addActions(Map.entry(new MFXButton("This window"), ___ -> {
-            openNewWindowDialogResult[0] = OpenNewWindowDialogResult.THIS_WINDOW;
-            dialog.close();
-        }));
-
-        dialogContent.addActions(Map.entry(new MFXButton("New window"), ___ -> {
-            openNewWindowDialogResult[0] = OpenNewWindowDialogResult.NEW_WINDOW;
-            dialog.close();
-        }));
-
-        dialogContent.addActions(Map.entry(new MFXButton("Cancel"), ___ -> {
-            openNewWindowDialogResult[0] = OpenNewWindowDialogResult.CANCEL;
-            dialog.close();
-        }));
-
-        dialogContent.setOnClose(___ -> {
-            openNewWindowDialogResult[0] = OpenNewWindowDialogResult.CANCEL;
-            dialog.close();
-        });
-
-        dialog.showAndWait();
-        return openNewWindowDialogResult[0];
-    }
-
-    private void initializeDialog() {
-        dialogContent = MFXGenericDialogBuilder.build()
-            .makeScrollable(true)
-            .get();
-        dialogContent.setShowMinimize(false);
-        dialogContent.setShowAlwaysOnTop(false);
-        dialogContent.setMaxSize(400, 200);
-
-        dialog = MFXGenericDialogBuilder.build(dialogContent)
-            .toStageDialogBuilder()
-            .initOwner(stage)
-            .initModality(Modality.APPLICATION_MODAL)
-            .setDraggable(true)
-            .setOwnerNode(ownerPaneForDialogs)
-            .setScrimPriority(ScrimPriority.WINDOW)
-            .setScrimOwner(true)
-            .get();
     }
 
     private static TuringMachine parseTuringMachineYamlDefinition(final String programYaml) {

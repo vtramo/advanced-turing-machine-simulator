@@ -20,4 +20,5 @@ module com.github.vtramo.mdtturingmachine {
     exports com.github.vtramo.turingmachine.engine.exception;
     opens com.github.vtramo.turingmachine to javafx.fxml;
     opens com.github.vtramo.turingmachine.ui to javafx.fxml;
+    opens com.github.vtramo.turingmachine.ui.dialogs to javafx.fxml;
 }

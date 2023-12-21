@@ -61,10 +61,15 @@
                                 <RowConstraints maxHeight="125.0" minHeight="125.0" prefHeight="125.0" vgrow="NEVER" />
                                 <RowConstraints maxHeight="125.0" minHeight="125.0" prefHeight="125.0" vgrow="NEVER" />
                             </rowConstraints>
-                            <HBox alignment="CENTER" spacing="200.0" GridPane.columnSpan="2147483647">
+                            <HBox stylesheets="@css/ComboBoxes.css" alignment="CENTER_RIGHT" spacing="200.0" GridPane.columnSpan="2147483647">
                                 <padding>
                                     <Insets top="5.0" />
                                 </padding>
+                                <MFXFilterComboBox fx:id="turingMachineExamplesFilterCombo" floatingText="Turing machine examples" prefWidth="300">
+                                    <HBox.margin>
+                                        <Insets right="40"/>
+                                    </HBox.margin>
+                                </MFXFilterComboBox>
                             </HBox>
                             <AnchorPane GridPane.columnSpan="2147483647" GridPane.rowIndex="1" GridPane.rowSpan="9" GridPane.vgrow="NEVER">
                                 <MFXScrollPane fx:id="tapesScrollPane" fitToWidth="true" style="-fx-background-color: transparent;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
