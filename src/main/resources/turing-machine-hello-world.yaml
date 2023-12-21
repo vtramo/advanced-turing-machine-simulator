@@ -9,65 +9,65 @@ tapes: 1
 transitions:
   s:
     '>':
-        next_state: s
-        write: '>'
-        move: '->'
-    '_':
+      next_state: s
+      write: '>'
+      move: '->'
+    '*':
       next_state: H
       write: 'H'
       move: '->'
   H:
-    '_':
+    '*':
       next_state: E
       write: 'E'
       move: '->'
   E:
-    '_':
+    '*':
       next_state: L1
       write: 'L'
       move: '->'
   L1:
-    '_':
+    '*':
       next_state: L2
       write: 'L'
       move: '->'
   L2:
-    '_':
+    '*':
       next_state: O
       write: 'O'
       move: '->'
   O:
-    '_':
+    '*':
       next_state: SPACE1
-      write: '_'
+      write: '|'
       move: '->'
   SPACE1:
-    '_':
+    '*':
       next_state: W
       write: 'W'
       move: '->'
   W:
-    '_':
+    '*':
       next_state: O2
       write: 'O'
       move: '->'
   O2:
-    '_':
+    '*':
       next_state: R
       write: 'R'
       move: '->'
   R:
-    '_':
+    '*':
       next_state: L3
       write: 'L'
       move: '->'
   L3:
-    '_':
+    '*':
       next_state: D
       write: 'D'
       move: '->'
   D:
-    '_':
+    '*':
       next_state: EXCLAM
       write: '!'
       move: '->'
@@ -76,6 +76,10 @@ transitions:
       next_state: CENTER
       write: '_'
       move: '<-'
+    '*':
+      next_state: EXCLAM
+      write: '_'
+      move: '->'
   CENTER:
     '!':
       next_state: CENTER
@@ -101,7 +105,11 @@ transitions:
       next_state: CENTER
       write: 'D'
       move: '<-'
-    '_':
+    '*':
+      next_state: CENTER
+      write: '_'
+      move: '<-'
+    '|':
       next_state: h
       write: '_'
       move: '-'

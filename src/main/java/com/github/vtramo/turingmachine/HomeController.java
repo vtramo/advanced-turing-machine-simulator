@@ -18,7 +18,7 @@ import java.nio.file.Path;
 
 public class HomeController {
     private static final String MDT_TAB_TEMPLATE_FXML = "turing-machine-tab-template.fxml";
-    private static final Path MDT_HELLO_WORLD_PATH = Path.of("src/main/resources/mdt-hello-world.yaml");
+    private static final Path MDT_HELLO_WORLD_PATH = Path.of("src/main/resources/turing-machine-hello-world.yaml");
     private static final String MDT_HELLO_WORLD_NAME = "Hello World";
 
     @FXML

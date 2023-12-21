@@ -4,15 +4,17 @@ import com.github.vtramo.turingmachine.engine.exception.DuplicateTransitionExcep
 import com.github.vtramo.turingmachine.engine.exception.MalformedInstructionException;
 import lombok.Getter;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+
+import static com.github.vtramo.turingmachine.engine.Transition.rejectingTransition;
+import static java.util.stream.Collectors.toSet;
 
 public class DeltaProgram {
 
     @Getter
     private final int totalTapes;
     private final Map<StateAndSymbols, Transition> program = new HashMap<>();
+    private final Set<StateAndSymbols> stateAndSymbolsWithAsterisks = new HashSet<>();
 
     public DeltaProgram(final int totalTapes) {
         if (totalTapes <= 0) {
@@ -28,6 +30,9 @@ public class DeltaProgram {
 
     public int addInstruction(final StateAndSymbols stateAndSymbols, final Transition transition) {
         checkInstructionValidity(stateAndSymbols, transition);
+        if (stateAndSymbols.containsAsterisks()) {
+            stateAndSymbolsWithAsterisks.add(stateAndSymbols);
+        }
         program.put(stateAndSymbols, transition);
         return program.size();
     }
@@ -48,6 +53,54 @@ public class DeltaProgram {
 
     public Transition apply(final StateAndSymbols stateAndSymbols) {
         final Transition transition = program.get(stateAndSymbols);
-        return transition == null ? Transition.rejectingTransition(stateAndSymbols) : transition;
+        return transition == null ? findAsteriskTransition(stateAndSymbols) : transition;
+    }
+
+    private Transition findAsteriskTransition(final StateAndSymbols stateAndSymbols) {
+        if (stateAndSymbolsWithAsterisks.isEmpty()) return rejectingTransition(stateAndSymbols);
+
+        final Set<StateAndSymbols> survivingStateAndSymbolsWithAsterisks = stateAndSymbolsWithAsterisks.stream()
+            .filter(stateAndSymbolsWithAsterisk -> Objects.equals(stateAndSymbolsWithAsterisk.state(), stateAndSymbols.state()))
+            .collect(toSet());
+
+        char[] symbols = stateAndSymbols.symbols();
+        for (final StateAndSymbols stateAndSymbolsWithAsterisk: survivingStateAndSymbolsWithAsterisks) {
+            final char[] symbolsWithAsterisks = stateAndSymbolsWithAsterisk.symbols();
+
+            boolean survivor = true;
+            for (int i = 0; i < symbols.length; i++) {
+                if (symbols[i] != symbolsWithAsterisks[i] && symbolsWithAsterisks[i] != '*') {
+                    survivor = false;
+                    break;
+                }
+            }
+
+            if (!survivor) {
+                survivingStateAndSymbolsWithAsterisks.remove(stateAndSymbolsWithAsterisk);
+            }
+        }
+
+        StateAndSymbols winningStateAndSymbols = null;
+        if (survivingStateAndSymbolsWithAsterisks.isEmpty()) {
+            return rejectingTransition(stateAndSymbols);
+        } else if (survivingStateAndSymbolsWithAsterisks.size() == 1) {
+            winningStateAndSymbols = survivingStateAndSymbolsWithAsterisks.iterator().next();
+        } else {
+            boolean breakFor = false;
+            for (int i = 0; i < totalTapes; i++) {
+                for (final StateAndSymbols survivingStateAndSymbolsWithAsterisk: survivingStateAndSymbolsWithAsterisks) {
+                    symbols = survivingStateAndSymbolsWithAsterisk.symbols();
+                    if (symbols[i] != '*') {
+                        breakFor = true;
+                        winningStateAndSymbols = survivingStateAndSymbolsWithAsterisk;
+                        break;
+                    }
+                }
+                if (breakFor) break;
+            }
+        }
+
+        assert winningStateAndSymbols != null;
+        return program.get(winningStateAndSymbols);
     }
 }
