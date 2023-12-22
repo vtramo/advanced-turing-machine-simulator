@@ -150,6 +150,7 @@ public class TuringMachineTabController {
 
     private void onTuringMachineExampleSelected() {
         final TuringMachineStoredProgram turingMachineStoredProgram = turingMachineExamplesFilterCombo.getSelectedItem();
+        turingMachineExamplesFilterCombo.clearSelection();
         final TuringMachineImportDialog turingMachineImportDialog = new TuringMachineImportDialog(primaryStage, masterAnchorPane);
         final String turingMachineName = turingMachineStoredProgram.name();
         final OpenNewWindowDialogResult openNewWindowDialogResult = turingMachineImportDialog.askToOpenNewWindow(turingMachineName);
