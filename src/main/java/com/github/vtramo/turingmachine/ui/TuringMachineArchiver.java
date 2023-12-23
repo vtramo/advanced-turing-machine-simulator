@@ -13,6 +13,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lombok.Builder;
+import lombok.Setter;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -25,7 +26,9 @@ public class TuringMachineArchiver {
     private final Pane ownerPaneForDialogs;
     private final Tab turingMachineTab;
     private final Supplier<String> turingMachineCodeSupplier;
+    @Setter
     private Path turingMachineCodePath;
+    @Setter
     private String turingMachineCode;
     private boolean isTuringMachineCodeChangedLastTime;
     private boolean isTuringMachineStored;

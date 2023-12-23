@@ -90,12 +90,13 @@ public class TuringMachineTabController {
     private String input = "";
     private TuringMachine turingMachine;
     private TuringMachine.Computation computation;
+    private TuringMachineArchiver turingMachineArchiver;
     private ObservableList<Configuration> observableConfigurations;
     private boolean isPlaying;
     private boolean stepInProgress;
     private double speedDelayMs = 500D;
 
-    private final Path turingMachineCodePath;
+    private Path turingMachineCodePath;
     private final HomeController homeController;
     private final Stage primaryStage;
 
@@ -150,6 +151,7 @@ public class TuringMachineTabController {
 
     private void onTuringMachineExampleSelected() {
         final TuringMachineStoredProgram turingMachineStoredProgram = turingMachineExamplesFilterCombo.getSelectedItem();
+        if (turingMachineStoredProgram == null) return;
         turingMachineExamplesFilterCombo.clearSelection();
         final TuringMachineImportDialog turingMachineImportDialog = new TuringMachineImportDialog(primaryStage, masterAnchorPane);
         final String turingMachineName = turingMachineStoredProgram.name();
@@ -162,7 +164,7 @@ public class TuringMachineTabController {
                     turingMachineStoredProgram.turingMachineCode(),
                     turingMachineStoredProgram.turingMachineCodePath()
                 );
-            case THIS_WINDOW -> changeTuringMachineOnThisTab(turingMachine);
+            case THIS_WINDOW -> changeTuringMachineOnThisTab(turingMachineStoredProgram);
             case CANCEL -> {}
         }
     }
@@ -212,27 +214,31 @@ public class TuringMachineTabController {
         });
 
         Platform.runLater(() -> {
-            final TuringMachineArchiver turingMachineArchiver = TuringMachineArchiver.builder()
-                .turingMachineTab(turingMachineTab)
-                .turingMachineCodeSupplier(() -> codeAreaYaml.getText())
-                .stage(primaryStage)
-                .ownerPaneForDialogs(masterAnchorPane)
-                .turingMachineCode(turingMachineCode)
-                .turingMachineCodePath(turingMachineCodePath)
-                .build();
+            configureTuringMachineArchiver();
 
             codeAreaYaml.addTextChangeListener((__, ___, ____) -> {
                 turingMachineArchiver.onTuringMachineCodeChanged();
             });
 
             saveButton.setOnMouseClicked(__ -> {
-                turingMachineCode = turingMachineArchiver.saveTuringMachineCode();
+                this.turingMachineCode = turingMachineArchiver.saveTuringMachineCode();
             });
 
             turingMachineTab.setOnCloseRequest(closeEvent -> {
                 turingMachineArchiver.onTuringMachineTabCloseRequest(closeEvent, turingMachine.getName());
             });
         });
+    }
+
+    private void configureTuringMachineArchiver() {
+        this.turingMachineArchiver = TuringMachineArchiver.builder()
+            .turingMachineTab(turingMachineTab)
+            .turingMachineCodeSupplier(() -> codeAreaYaml.getText())
+            .stage(primaryStage)
+            .ownerPaneForDialogs(masterAnchorPane)
+            .turingMachineCode(turingMachineCode)
+            .turingMachineCodePath(turingMachineCodePath)
+            .build();
     }
 
     private void configureSpeedSlider() {
@@ -274,26 +280,50 @@ public class TuringMachineTabController {
         if (optionalTuringMachineImportResult.isEmpty()) return;
 
         final TuringMachineImportResult turingMachineImportResult = optionalTuringMachineImportResult.get();
-        final TuringMachine importedTuringMachine = turingMachineImportResult.turingMachine();
-        final String importedYamlProgram = turingMachineImportResult.turingMachineCode();
-        turingMachine = importedTuringMachine;
-        turingMachineCode = importedYamlProgram;
 
         if (turingMachineImportResult.openNewWindow()) {
             final String turingMachineName = turingMachine.getName();
             final Path turingMachineYamlProgramPath = turingMachineImportResult.turingMachineCodePath();
             homeController.createTuringMachineTab(turingMachineName, turingMachineCode, turingMachineYamlProgramPath);
         } else {
-            changeTuringMachineOnThisTab(importedTuringMachine);
+            changeTuringMachineOnThisTab(turingMachineImportResult);
         }
 
     }
 
-    private void changeTuringMachineOnThisTab(TuringMachine importedTuringMachine) {
-        codeAreaYaml.setText(turingMachineCode);
+    private void changeTuringMachineOnThisTab(TuringMachineImportResult turingMachineImportResult) {
+        final TuringMachine importedTuringMachine = turingMachineImportResult.turingMachine();
+        final String importedYamlProgram = turingMachineImportResult.turingMachineCode();
+        final Path turingMachineCodePath = turingMachineImportResult.turingMachineCodePath();
+
+        changeTuringMachineOnThisTab(importedTuringMachine, importedYamlProgram, turingMachineCodePath);
+    }
+
+    private void changeTuringMachineOnThisTab(TuringMachineStoredProgram turingMachineStoredProgram) {
+        final TuringMachine turingMachine = turingMachineStoredProgram.turingMachine();
+        final String turingMachineCode = turingMachineStoredProgram.turingMachineCode();
+        final Path turingMachineCodePath = turingMachineStoredProgram.turingMachineCodePath();
+
+        changeTuringMachineOnThisTab(turingMachine, turingMachineCode, turingMachineCodePath);
+    }
+
+    private void changeTuringMachineOnThisTab(
+        final TuringMachine turingMachine,
+        final String turingMachineCode,
+        final Path turingMachineCodePath
+    ) {
+        this.turingMachine = turingMachine;
+        this.turingMachineCode = turingMachineCode;
+        this.turingMachineCodePath = turingMachineCodePath;
+
+        this.turingMachineArchiver.setTuringMachineCode(turingMachineCode);
+        this.turingMachineArchiver.setTuringMachineCodePath(turingMachineCodePath);
+
+        codeAreaYaml.setText(this.turingMachineCode);
+        turingMachineTab.setText(turingMachine.getName());
+
         turingMachineCompilerView.clearLogs();
         reset();
-        turingMachineTab.setText(importedTuringMachine.getName());
     }
 
     private void importTuringMachine(final TuringMachineStoredProgram turingMachineStoredProgram) {
