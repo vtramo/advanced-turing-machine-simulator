@@ -101,7 +101,10 @@ public class DeltaProgram {
             }
         }
 
-        assert winningStateAndSymbols != null;
-        return program.get(winningStateAndSymbols);
+        Transition transition = program.get(winningStateAndSymbols);
+        if (transition.containsAsterisks()) {
+            transition = transition.replaceAsterisksWith(stateAndSymbols.symbols());
+        }
+        return transition;
     }
 }

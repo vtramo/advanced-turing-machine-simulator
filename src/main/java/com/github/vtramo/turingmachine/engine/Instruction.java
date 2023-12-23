@@ -1,7 +1,5 @@
 package com.github.vtramo.turingmachine.engine;
 
-import com.github.vtramo.turingmachine.engine.exception.MalformedInstructionException;
-
 public record Instruction(StateAndSymbols stateAndSymbols, Transition transition) {
 
     public static Instruction of(final String left, final String right) {
@@ -20,9 +18,6 @@ public record Instruction(StateAndSymbols stateAndSymbols, Transition transition
         final Move[] moves = new Move[symbols.length];
         for (int i = 1, j = 0; i < rightArray.length; i += 2, j++) {
             final char symbol = rightArray[i].strip().toCharArray()[0];
-            if (symbol == '*') {
-                throw new MalformedInstructionException("It is not possible to write special symbol '*'!");
-            }
             final Direction direction = Direction.of(rightArray[i + 1].strip());
             moves[j] = Move.of(symbol, direction);
         }

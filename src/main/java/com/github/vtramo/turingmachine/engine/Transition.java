@@ -9,6 +9,23 @@ public record Transition(String state, List<Move> moves) {
     public int totalTapes() {
         return moves.size();
     }
+    public boolean containsAsterisks() {
+        return moves.stream().anyMatch(Move::symbolIsAsterisk);
+    }
+    public Transition replaceAsterisksWith(final char[] symbols) {
+        if (!containsAsterisks()) throw new IllegalArgumentException();
+        if (symbols.length != moves.size()) throw new IllegalArgumentException();
+        final Move[] replacedMoves = new Move[symbols.length];
+        for (int i = 0; i < symbols.length; i++) {
+            final char symbol = symbols[i];
+            Move move = moves.get(i);
+            if (move.symbolIsAsterisk()) {
+                move = move.replaceAsteriskWith(symbol);
+            }
+            replacedMoves[i] = move;
+        }
+        return Transition.of(state, replacedMoves);
+    }
 
     public static Transition of(final String state, final Move ... moves) {
         return new Transition(state, new ArrayList<>(asList(moves)));
