@@ -64,9 +64,10 @@ public class DeltaProgram {
             .collect(toSet());
 
         char[] symbols = stateAndSymbols.symbols();
-        for (final StateAndSymbols stateAndSymbolsWithAsterisk: survivingStateAndSymbolsWithAsterisks) {
+        final Iterator<StateAndSymbols> survivingStateAndSymbolsWithAsterisksIterator = survivingStateAndSymbolsWithAsterisks.iterator();
+        while (survivingStateAndSymbolsWithAsterisksIterator.hasNext()) {
+            final StateAndSymbols stateAndSymbolsWithAsterisk = survivingStateAndSymbolsWithAsterisksIterator.next();
             final char[] symbolsWithAsterisks = stateAndSymbolsWithAsterisk.symbols();
-
             boolean survivor = true;
             for (int i = 0; i < symbols.length; i++) {
                 if (symbols[i] != symbolsWithAsterisks[i] && symbolsWithAsterisks[i] != '*') {
@@ -76,7 +77,7 @@ public class DeltaProgram {
             }
 
             if (!survivor) {
-                survivingStateAndSymbolsWithAsterisks.remove(stateAndSymbolsWithAsterisk);
+                survivingStateAndSymbolsWithAsterisksIterator.remove();
             }
         }
 
