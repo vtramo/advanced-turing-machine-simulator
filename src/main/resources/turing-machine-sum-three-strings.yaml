@@ -1,0 +1,242 @@
+name: Binary Addition
+description: |
+  A Turing Machine structured to perform
+  the addition of two binary numbers.
+  The input to this function should be
+  provided in the specific format 'x;y'.
+  Here, 'x' and 'y' denote the two binary
+  numbers that are to be added.
+
+initial_state: COPY
+tapes: 3
+
+transitions:
+  COPY:
+    '>,>,>':
+      next_state: COPY
+      write: '>,>,>'
+      move: '->,->,->'
+    '0,_,_':
+      next_state: COPY
+      write: '0,0,_'
+      move: '->,->,->'
+    '1,_,_':
+      next_state: COPY
+      write: '1,1,_'
+      move: '->,->,->'
+    ';,_,_':
+      next_state: COPY-NEXT
+      write: ';,_,_'
+      move: '->,-,->'
+
+  COPY-NEXT:
+    '0,*,*':
+      next_state: COPY-NEXT
+      write: '0,_,_'
+      move: '->,-,->'
+    '1,*,*':
+      next_state: COPY-NEXT
+      write: '1,_,_'
+      move: '->,-,->'
+    '_,*,*':
+      next_state: SUM
+      write: '_,_,_'
+      move: '<-,<-,-'
+
+  SUM:
+    '0,0,_':
+      next_state: SUM
+      write: '0,0,0'
+      move: '<-,<-,<-'
+    '0,1,_':
+      next_state: SUM
+      write: '0,1,1'
+      move: '<-,<-,<-'
+    '1,0,_':
+      next_state: SUM
+      write: '1,0,1'
+      move: '<-,<-,<-'
+    '1,1,_':
+      next_state: SUM-R
+      write: '1,1,0'
+      move: '<-,<-,<-'
+    '0,>,*':
+      next_state: COPY-1
+      write: '0,>,0'
+      move: '<-,->,<-'
+    '1,>,*':
+      next_state: COPY-1
+      write: '1,>,1'
+      move: '<-,->,<-'
+    ';,0,*':
+      next_state: COPY-2
+      write: ';,1,0'
+      move: '-,<-,<-'
+    ';,1,*':
+      next_state: COPY-2
+      write: ';,1,1'
+      move: '-,<-,<-'
+    ';,>,*':
+      next_state: SEP
+      write: ';,>,_'
+      move: '-,->,->'
+  COPY-1:
+    '0,*,*':
+      next_state: COPY-1
+      write: '0,*,0'
+      move: '<-,-,<-'
+    '1,*,*':
+      next_state: COPY-1
+      write: '1,*,1'
+      move: '<-,-,<-'
+    ';,>,*':
+      next_state: SEP
+      write: ';,>,*'
+      move: '-,->,-'
+  COPY-2:
+    ';,1,*':
+      next_state: COPY-2
+      write: ';,1,1'
+      move: '-,<-,<-'
+    ';,0,*':
+      next_state: COPY-2
+      write: ';,0,0'
+      move: '-,<-,<-'
+    ';,>,*':
+      next_state: SEP
+      write: ';,>,*'
+      move: '-,->,->'
+  SUM-R:
+    '0,0,_':
+      next_state: SUM
+      write: '0,0,1'
+      move: '<-,<-,<-'
+    '0,1,_':
+      next_state: SUM-R
+      write: '0,1,0'
+      move: '<-,<-,<-'
+    '1,0,_':
+      next_state: SUM-R
+      write: '1,0,0'
+      move: '<-,<-,<-'
+    '1,1,_':
+      next_state: SUM-R
+      write: '1,1,1'
+      move: '<-,<-,<-'
+    '0,>,*':
+      next_state: COPY-1
+      write: '0,>,1'
+      move: '<-,->,<-'
+    '1,>,*':
+      next_state: COPY-1-R
+      write: '1,>,1'
+      move: '<-,->,<-'
+    ';,0,*':
+      next_state: COPY-2
+      write: ';,1,1'
+      move: '-,<-,<-'
+    ';,1,*':
+      next_state: COPY-2-R
+      write: ';,1,0'
+      move: '-,<-,<-'
+    ';,>,*':
+      next_state: SEP
+      write: ';,>,1'
+      move: '-,->,->'
+  COPY-1-R:
+    '1,*,*':
+      next_state: COPY-1
+      write: '*,*,1'
+      move: '-,-,<-'
+  COPY-2-R:
+    ';,0,_':
+      next_state: COPY-2
+      write: ';,*,1'
+      move: '-,<-,<-'
+    ';,1,_':
+      next_state: COPY-2-R
+      write: ';,1,0'
+      move: '-,<-,<-'
+    ';,>,_':
+      next_state: SEP
+      write: ';,>,1'
+      move: '-,->,->'
+  SEP:
+    '*,*,*':
+      next_state: SEP
+      write: '*,*,*'
+      move: '-,-,->'
+    '*,*,_':
+      next_state: BACK
+      write: '*,*,|'
+      move: '-,-,<-'
+  BACK:
+    '*,*,*':
+      next_state: BACK
+      write: '*,*,*'
+      move: '-,-,<-'
+    '*,*,>':
+      next_state: FIND
+      write: '*,*,*'
+      move: '-,-,->'
+  FIND:
+    '*,*,*':
+      next_state: FIND
+      write: '*,*,*'
+      move: '-,-,->'
+    '*,*,0':
+      next_state: WRITE-0
+      write: '*,*,_'
+      move: '-,-,<-'
+    '*,*,1':
+      next_state: WRITE-1
+      write: '*,*,_'
+      move: '-,-,<-'
+    '*,*,|':
+      next_state: h
+      write: '*,*,_'
+      move: '-,-,-'
+  WRITE-0:
+    '*,*,_':
+      next_state: WRITE-0
+      write: '*,*,_'
+      move: '-,-,<-'
+    '*,*,>':
+      next_state: WRITE-0-OK
+      write: '*,*,>'
+      move: '-,-,->'
+    '*,*,0':
+      next_state: WRITE-0-OK
+      write: '*,*,0'
+      move: '-,-,->'
+    '*,*,1':
+      next_state: WRITE-0-OK
+      write: '*,*,1'
+      move: '-,-,->'
+  WRITE-0-OK:
+    '*,*,_':
+      next_state: FIND
+      write: '*,*,0'
+      move: '-,-,->'
+  WRITE-1:
+    '*,*,_':
+      next_state: WRITE-1
+      write: '*,*,_'
+      move: '-,-,<-'
+    '*,*,>':
+      next_state: WRITE-1-OK
+      write: '*,*,>'
+      move: '-,-,->'
+    '*,*,0':
+      next_state: WRITE-1-OK
+      write: '*,*,0'
+      move: '-,-,->'
+    '*,*,1':
+      next_state: WRITE-1-OK
+      write: '*,*,1'
+      move: '-,-,->'
+  WRITE-1-OK:
+    '*,*,_':
+      next_state: FIND
+      write: '*,*,1'
+      move: '-,-,->'
