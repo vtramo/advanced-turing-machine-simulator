@@ -1,8 +1,19 @@
-import com.github.vtramo.turingmachine.engine.*;
-import org.junit.jupiter.api.*;
+import com.github.vtramo.turingmachine.engine.Configuration;
+import com.github.vtramo.turingmachine.engine.TerminalState;
+import com.github.vtramo.turingmachine.engine.TuringMachine;
+import com.github.vtramo.turingmachine.engine.TuringMachinePrograms;
+import com.github.vtramo.turingmachine.parser.TuringMachineParserYaml;
+import lombok.SneakyThrows;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.EmptySource;
+
+import java.io.FileInputStream;
+import java.nio.file.Path;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -57,59 +68,19 @@ public class TuringMachineTest {
     @DisplayName("A Turing machine that performs the sum of two binary numbers")
     class SumOfTwoBinaryNumbersTuringMachine {
 
-        @Test
-        void sum() {
-            final String input = "0001;0001";
-            final String initialState = "s";
-            final int tapes = 3;
+        @BeforeAll
+        @SneakyThrows
+        void createTuringMachine() {
+            final TuringMachineParserYaml turingMachineParserYaml = new TuringMachineParserYaml();
+            turingMachine = turingMachineParserYaml.parse(new FileInputStream(
+                Path.of("src/test/resources/turing-machine-sum-three-strings.yaml")
+                    .toFile()));
+        }
 
-            final DeltaProgram deltaProgram = new DeltaProgram(tapes);
-            deltaProgram.addInstruction(Instruction.of("s, >, >, >", "s, >, ->, >, ->, >, ->"));
-            deltaProgram.addInstruction(Instruction.of("s, 0, _, _", "s, 0, ->, _, -, 0, ->"));
-            deltaProgram.addInstruction(Instruction.of("s, 1, _, _", "s, 1, ->, _, -, 0, ->"));
-            deltaProgram.addInstruction(Instruction.of("s, ;, _, _", "c, ;, ->, _, -, 0, ->"));
-            deltaProgram.addInstruction(Instruction.of("c, 0, _, _", "c, 0, ->, 0, ->, 0, ->"));
-            deltaProgram.addInstruction(Instruction.of("c, 1, _, _", "c, 1, ->, 1, ->, 0, ->"));
-            deltaProgram.addInstruction(Instruction.of("c, _, _, _", "b, _, <-, _, -, _, -"));
-            deltaProgram.addInstruction(Instruction.of("b, 0, _, _", "b, 0, <-, _, -, _, -"));
-            deltaProgram.addInstruction(Instruction.of("b, 1, _, _", "b, 1, <-, _, -, _, -"));
-            deltaProgram.addInstruction(Instruction.of("b, ;, _, _", "q0, ;, <-, _, <-, _, <-"));
-            deltaProgram.addInstruction(Instruction.of("q0, 0, 0, 0", "q0, 0, <-, 0, <-, 0, <-"));
-            deltaProgram.addInstruction(Instruction.of("q0, 0, 1, 0", "q0, 0, <-, 1, <-, 1, <-"));
-            deltaProgram.addInstruction(Instruction.of("q0, 1, 0, 0", "q0, 1, <-, 0, <-, 1, <-"));
-            deltaProgram.addInstruction(Instruction.of("q0, 1, 1, 0", "q1, 1, <-, 1, <-, 0, <-"));
-            deltaProgram.addInstruction(Instruction.of("q1, 0, 0, 0", "q0, 0, <-, 0, <-, 1, <-"));
-            deltaProgram.addInstruction(Instruction.of("q1, 0, 1, 0", "q1, 0, <-, 1, <-, 0, <-"));
-            deltaProgram.addInstruction(Instruction.of("q1, 1, 0, 0", "q1, 1, <-, 0, <-, 0, <-"));
-            deltaProgram.addInstruction(Instruction.of("q1, 1, 1, 0", "q1, 1, <-, 1, <-, 1, <-"));
-            deltaProgram.addInstruction(Instruction.of("q0, >, >, 0", "h, >, ->, >, ->, 0, -"));
-            deltaProgram.addInstruction(Instruction.of("q0, >, 0, 0", "c2, >, ->, 0, <-, 0, <-"));
-            deltaProgram.addInstruction(Instruction.of("q0, >, 1, 0", "c2, >, ->, 1, <-, 1, <-"));
-            deltaProgram.addInstruction(Instruction.of("q0, 0, >, 0", "c1, 0, <-, >, ->, 0, <-"));
-            deltaProgram.addInstruction(Instruction.of("q0, 1, >, 0", "c1, 1, <-, >, ->, 1, <-"));
-            deltaProgram.addInstruction(Instruction.of("c2, 0, 0, 0", "c2, 0, -, 0, <-, 0, <-"));
-            deltaProgram.addInstruction(Instruction.of("c2, 1, 0, 0", "c2, 0, -, 0, <-, 0, <-"));
-            deltaProgram.addInstruction(Instruction.of("c2, >, 0, 0", "c2, 0, -, 0, <-, 0, <-"));
-            deltaProgram.addInstruction(Instruction.of("c2, _, 0, 0", "c2, 0, -, 0, <-, 0, <-"));
-            deltaProgram.addInstruction(Instruction.of("c2, ;, 0, 0", "c2, 0, -, 0, <-, 0, <-"));
-            deltaProgram.addInstruction(Instruction.of("c2, 0, 1, 0", "c2, 0, -, 1, <-, 1, <-"));
-            deltaProgram.addInstruction(Instruction.of("c2, 1, 1, 0", "c2, 0, -, 1, <-, 1, <-"));
-            deltaProgram.addInstruction(Instruction.of("c2, >, 1, 0", "c2, 0, -, 1, <-, 1, <-"));
-            deltaProgram.addInstruction(Instruction.of("c2, _, 1, 0", "c2, 0, -, 1, <-, 1, <-"));
-            deltaProgram.addInstruction(Instruction.of("c2, ;, 1, 0", "c2, 0, -, 1, <-, 1, <-"));
-            deltaProgram.addInstruction(Instruction.of("c2, 0, >, 0", "h, 0, -, >, ->, 0, <-"));
-            deltaProgram.addInstruction(Instruction.of("c2, 1, >, 0", "h, 1, -, >, ->, 0, <-"));
-            deltaProgram.addInstruction(Instruction.of("c2, >, >, 0", "h, >, -, >, ->, 0, <-"));
-            deltaProgram.addInstruction(Instruction.of("c2, _, >, 0", "h, _, -, >, ->, 0, <-"));
-            deltaProgram.addInstruction(Instruction.of("c1, 0, 0, 0", "c1, 0, <-, 0, -, 0, <-"));
-            deltaProgram.addInstruction(Instruction.of("c1, 0, 1, 0", "c1, 0, <-, 1, -, 0, <-"));
-            deltaProgram.addInstruction(Instruction.of("c1, 1, 0, 0", "c1, 1, <-, 0, -, 1, <-"));
-            deltaProgram.addInstruction(Instruction.of("c1, 1, 1, 0", "c1, 1, <-, 1, -, 1, <-"));
-            deltaProgram.addInstruction(Instruction.of("c1, >, 0, 0", "h, >, ->, 0, -, 0, <-"));
-            deltaProgram.addInstruction(Instruction.of("c1, >, 1, 0", "h, >, ->, 1, -, 0, <-"));
-
-
-            final TuringMachine turingMachine = new TuringMachine(initialState, deltaProgram);
+        @ParameterizedTest
+        @CsvFileSource(resources = "/sum-strings.csv", numLinesToSkip = 1)
+        @DisplayName("Should return correct results")
+        public void sum(final String input, String expectedOutput) {
             final TuringMachine.Computation computation = turingMachine.startComputation(input);
             Configuration finalConfiguration = null;
             while (computation.hasNextConfiguration()) {
@@ -117,7 +88,8 @@ public class TuringMachineTest {
             }
 
             assertThat(finalConfiguration, is(notNullValue()));
-            assertThat(computation.getOutput(), is(equalTo("000000010")));
+            assertThat(computation.isHaltingState(), is(true));
+            assertThat(computation.getOutput(), is(equalTo(expectedOutput)));
         }
     }
 }
