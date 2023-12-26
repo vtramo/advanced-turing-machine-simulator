@@ -92,4 +92,34 @@ public class TuringMachineTest {
             assertThat(computation.getOutput(), is(equalTo(expectedOutput)));
         }
     }
+
+    @Nested
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @DisplayName("A Turing machine that performs the two's complement operation on binary numbers")
+    class TwosComplement {
+
+        @BeforeAll
+        @SneakyThrows
+        void createTuringMachine() {
+            final TuringMachineParserYaml turingMachineParserYaml = new TuringMachineParserYaml();
+            turingMachine = turingMachineParserYaml.parse(new FileInputStream(
+                Path.of("src/test/resources/turing-machine-two-s-complement.yaml")
+                    .toFile()));
+        }
+
+        @ParameterizedTest
+        @CsvFileSource(resources = "/two-s-complement-strings.csv", numLinesToSkip = 1)
+        @DisplayName("Should return correct results")
+        public void testTwosComplement(final String input, String expectedOutput) {
+            final TuringMachine.Computation computation = turingMachine.startComputation(input);
+            Configuration finalConfiguration = null;
+            while (computation.hasNextConfiguration()) {
+                finalConfiguration = computation.step();
+            }
+
+            assertThat(finalConfiguration, is(notNullValue()));
+            assertThat(computation.isHaltingState(), is(true));
+            assertThat(computation.getOutput(), is(equalTo(expectedOutput)));
+        }
+    }
 }
