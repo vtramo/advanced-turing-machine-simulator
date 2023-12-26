@@ -48,7 +48,12 @@ public class TuringMachineArchiver {
         this.turingMachineCodeSupplier = turingMachineCodeSupplier;
         this.turingMachineCode = turingMachineCode;
         this.turingMachineCodePath = turingMachineCodePath;
-        this.isTuringMachineStored = (turingMachineCodePath != null);
+        reset();
+    }
+
+    public void reset() {
+        isTuringMachineStored = (turingMachineCodePath != null);
+        isTuringMachineCodeChangedLastTime = false;
         onTuringMachineCodeChanged();
     }
 

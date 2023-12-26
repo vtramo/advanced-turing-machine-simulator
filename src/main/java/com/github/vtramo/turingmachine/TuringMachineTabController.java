@@ -325,6 +325,7 @@ public class TuringMachineTabController {
 
         this.turingMachineArchiver.setTuringMachineCode(turingMachineCode);
         this.turingMachineArchiver.setTuringMachineCodePath(turingMachineCodePath);
+        this.turingMachineArchiver.reset();
 
         codeAreaYaml.setText(this.turingMachineCode);
         turingMachineTab.setText(turingMachine.getName());
