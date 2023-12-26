@@ -1,0 +1,47 @@
+name: 10-tape Input Copy
+description: |
+  A 10-tape Turing machine that copies
+  the input from the first tape onto all 
+  other tapes
+
+initial_state: COPY
+tapes: 10
+
+transitions:
+  COPY:
+    '>,>,>,>,>,>,>,>,>,>':
+      next_state: COPY
+      write: '>,>,>,>,>,>,>,>,>,>'
+      move: '->,->,->,->,->,->,->,->,->,->'
+    '0,_,_,_,_,_,_,_,_,_':
+      next_state: COPY
+      write: '0,0,0,0,0,0,0,0,0,0'
+      move: '->,->,->,->,->,->,->,->,->,->'
+    '1,_,_,_,_,_,_,_,_,_':
+      next_state: COPY
+      write: '1,1,1,1,1,1,1,1,1,1'
+      move: '->,->,->,->,->,->,->,->,->,->'
+    '_,_,_,_,_,_,_,_,_,_':
+      next_state: h
+      write: '_,_,_,_,_,_,_,_,_,_'
+      move: '-,-,-,-,-,-,-,-,-,-'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
