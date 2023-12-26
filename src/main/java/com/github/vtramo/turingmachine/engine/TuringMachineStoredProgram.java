@@ -16,7 +16,8 @@ public record TuringMachineStoredProgram(
 ) {
     public static Collection<TuringMachineStoredProgram> turingMachineStoredPrograms = List.of(
         TuringMachineStoredProgram.of(Path.of("src/main/resources/turing-machine-palindrome-two-strings.yaml")),
-        TuringMachineStoredProgram.of(Path.of("src/main/resources/turing-machine-sum-three-strings.yaml"))
+        TuringMachineStoredProgram.of(Path.of("src/main/resources/turing-machine-sum-three-strings.yaml")),
+        TuringMachineStoredProgram.of(Path.of("src/main/resources/turing-machine-two-s-complement.yaml"))
     );
 
     public static TuringMachineStoredProgram of(final Path turingMachineCodePath) {

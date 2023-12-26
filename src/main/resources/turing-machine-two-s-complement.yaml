@@ -1,0 +1,49 @@
+name: Two's Complement Binary Numbers
+description: |
+  A two-tape Turing machine that performs
+  the two's complement operation on binary
+  numbers
+
+initial_state: END
+tapes: 2
+
+transitions:
+  END:
+    '>,>':
+      next_state: END
+      write: '>,>'
+      move: '->,->'
+    '*,_':
+      next_state: END
+      write: '*,_'
+      move: '->,->'
+    '_,_':
+      next_state: COPY-0
+      write: '_,_'
+      move: '<-, <-'
+  COPY-0:
+    '0,_':
+      next_state: COPY-0
+      write: '0,0'
+      move: '<-,<-'
+    '1,_':
+      next_state: FLIP
+      write: '1,1'
+      move: '<-,<-'
+    '>,>':
+      next_state: h
+      write: '>,>'
+      move: '->,->'
+  FLIP:
+    '0,_':
+      next_state: FLIP
+      write: '0,1'
+      move: '<-,<-'
+    '1,_':
+      next_state: FLIP
+      write: '1,0'
+      move: '<-,<-'
+    '>,>':
+      next_state: h
+      write: '>,>'
+      move: '->,->'
