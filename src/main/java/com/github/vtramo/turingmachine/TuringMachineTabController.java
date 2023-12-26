@@ -121,6 +121,73 @@ public class TuringMachineTabController {
         configureTuringMachineExamplesFilterCombo();
     }
 
+    private void configureButtonOnMouseClickedListeners() {
+        playButton.setOnMouseClicked(__ -> {
+            if (!isPlaying) {
+                stepBackButton.setDisable(true);
+                stepButton.setDisable(true);
+                isPlaying = true;
+                play();
+            }
+        });
+
+        pauseButton.setDisable(true);
+        pauseButton.setOnMouseClicked(__ -> {
+            isPlaying = false;
+            pauseButton.setDisable(true);
+        });
+
+        stepButton.setOnMouseClicked(__ -> {
+            if (!stepInProgress) {
+                stepInProgress = true;
+                step()
+                    .thenAccept(___ -> {
+                        stepInProgress = false;
+                        if (computation.isHalted()) {
+                            stepButton.setDisable(true);
+                            playButton.setDisable(true);
+                            isPlaying = false;
+                            showMachineHaltedDialog();
+                        }
+                    });
+            }
+        });
+
+        stepBackButton.setDisable(true);
+        stepBackButton.setOnMouseClicked(__ -> {
+            if (!stepInProgress) {
+                stepInProgress = true;
+                stepBack()
+                        .thenAccept(___ -> stepInProgress = false);
+            }
+        });
+
+        resetButton.setOnMouseClicked(__ -> reset());
+
+        loadInputButton.getStyleClass().removeFirst();
+        loadInputButton.setOnMouseClicked(__ -> loadInputFromTextField());
+
+        importButton.setOnMouseClicked(__ -> {
+            importTuringMachine();
+        });
+
+        Platform.runLater(() -> {
+            configureTuringMachineArchiver();
+
+            codeAreaYaml.addTextChangeListener((__, ___, ____) -> {
+                turingMachineArchiver.onTuringMachineCodeChanged();
+            });
+
+            saveButton.setOnMouseClicked(__ -> {
+                this.turingMachineCode = turingMachineArchiver.saveTuringMachineCode();
+            });
+
+            turingMachineTab.setOnCloseRequest(closeEvent -> {
+                turingMachineArchiver.onTuringMachineTabCloseRequest(closeEvent, turingMachine.getName());
+            });
+        });
+    }
+
     private void configureTuringMachineExamplesFilterCombo() {
         final ObservableList<TuringMachineStoredProgram> turingMachineStoredPrograms =
             FXCollections.observableArrayList(TuringMachineStoredProgram.turingMachineStoredPrograms);
@@ -169,67 +236,6 @@ public class TuringMachineTabController {
         }
     }
 
-    private void configureButtonOnMouseClickedListeners() {
-        playButton.setOnMouseClicked(__ -> {
-            if (!isPlaying) {
-                isPlaying = true;
-                play();
-            }
-        });
-
-        pauseButton.setOnMouseClicked(__ -> isPlaying = false);
-
-        stepButton.setOnMouseClicked(__ -> {
-            if (!stepInProgress) {
-                stepInProgress = true;
-                step()
-                    .thenAccept(___ -> {
-                        stepInProgress = false;
-                        if (computation.isHalted()) {
-                            stepButton.setDisable(true);
-                            playButton.setDisable(true);
-                            isPlaying = false;
-                            showMachineHaltedDialog();
-                        }
-                    });
-            }
-        });
-
-        stepBackButton.setDisable(true);
-        stepBackButton.setOnMouseClicked(__ -> {
-            if (!stepInProgress) {
-                stepInProgress = true;
-                stepBack()
-                    .thenAccept(___ -> stepInProgress = false);
-            }
-        });
-
-        resetButton.setOnMouseClicked(__ -> reset());
-
-        loadInputButton.getStyleClass().removeFirst();
-        loadInputButton.setOnMouseClicked(__ -> loadInputFromTextField());
-
-        importButton.setOnMouseClicked(__ -> {
-            importTuringMachine();
-        });
-
-        Platform.runLater(() -> {
-            configureTuringMachineArchiver();
-
-            codeAreaYaml.addTextChangeListener((__, ___, ____) -> {
-                turingMachineArchiver.onTuringMachineCodeChanged();
-            });
-
-            saveButton.setOnMouseClicked(__ -> {
-                this.turingMachineCode = turingMachineArchiver.saveTuringMachineCode();
-            });
-
-            turingMachineTab.setOnCloseRequest(closeEvent -> {
-                turingMachineArchiver.onTuringMachineTabCloseRequest(closeEvent, turingMachine.getName());
-            });
-        });
-    }
-
     private void configureTuringMachineArchiver() {
         this.turingMachineArchiver = TuringMachineArchiver.builder()
             .turingMachineTab(turingMachineTab)
@@ -244,6 +250,7 @@ public class TuringMachineTabController {
     private void configureSpeedSlider() {
         speedSlider.setValue(speedDelayMs - DELAY_BEFORE_NEXT_MOVE_MS + 0.1);
         final DoubleProperty speedSliderDoubleProperty = speedSlider.valueProperty();
+        speedSlider.setRotate(180);
         speedSliderDoubleProperty.addListener((__, ___, newValue)
             -> speedDelayMs = newValue.longValue() - DELAY_BEFORE_NEXT_MOVE_MS + 0.1);
     }
@@ -348,15 +355,30 @@ public class TuringMachineTabController {
 
     private void play() {
         if (!isPlaying || !computation.hasNextConfiguration()) return;
+        playButton.setDisable(true);
+        pauseButton.setDisable(false);
         step()
             .thenAccept(__ -> {
                 if (computation.isHalted()) {
                     stepButton.setDisable(true);
                     playButton.setDisable(true);
+                    pauseButton.setDisable(true);
                     isPlaying = false;
                     showMachineHaltedDialog();
                     return;
                 }
+
+                if (!isPlaying) {
+                    playButton.setDisable(false);
+                    pauseButton.setDisable(true);
+                    if (computation.hasNextConfiguration()) {
+                        stepButton.setDisable(false);
+                    }
+                    if (computation.hasPreviousConfiguration()) {
+                        stepBackButton.setDisable(false);
+                    }
+                }
+
                 play();
             });
     }
@@ -402,7 +424,9 @@ public class TuringMachineTabController {
 
     private CompletableFuture<Void> step() {
         final Transition transition = computation.getNextTransition();
-        stepBackButton.setDisable(false);
+        if (!isPlaying) {
+            stepBackButton.setDisable(false);
+        }
         computation.step();
         final List<Configuration> configurations = computation.getConfigurations();
         observableConfigurations.addFirst(configurations.getLast());
@@ -444,6 +468,7 @@ public class TuringMachineTabController {
         stepBackButton.setDisable(true);
         stepButton.setDisable(false);
         playButton.setDisable(false);
+        pauseButton.setDisable(true);
         tapesVBox.getChildren().clear();
         createTapes();
         computation = turingMachine.startComputation(input);
