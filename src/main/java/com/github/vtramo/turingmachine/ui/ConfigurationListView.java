@@ -28,9 +28,12 @@ public class ConfigurationListView extends MFXListView<Configuration> {
                 children.clear();
                 children.add(configurationImageView);
                 final double currentListViewWidth = ConfigurationListView.this.getWidth();
-                final double imageWidth = configurationImageView.getLayoutBounds().getWidth();
+                final double imageWidth = configurationImage.getWidth();
                 maxWidth = Math.max(currentListViewWidth, imageWidth + WIDTH_OFFSET);
                 ConfigurationListView.this.setPrefWidth(maxWidth);
+                ConfigurationListView.this.setWidth(maxWidth);
+                ConfigurationListView.this.setMaxWidth(maxWidth);
+                ConfigurationListView.this.setMinWidth(maxWidth);
             }
 
             @Override
