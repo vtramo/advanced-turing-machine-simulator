@@ -58,6 +58,17 @@
     -fx-text-fill: white;
 }
 
+#controlButton {
+	-fx-border-radius: 100;
+	-fx-background-color: white;
+	-fx-border-color: rgb(128, 128, 128, 0.5);
+	-fx-background-radius: 100;
+	-fx-min-width: 65px;
+	-fx-min-height: 65px;
+	-fx-max-width: 65px;
+	-fx-max-height: 65px;
+}
+
 .outline-button {
 	-fx-background-color: transparent;
 	-fx-border-color: -mfx-purple;

@@ -1,0 +1,8 @@
+@import 'Common.css';
+@import 'MFXColors.css';
+
+.text {
+    -fx-font-family: "Source Code Pro Medium for Powerline";
+    -fx-font-size: 13px;
+    -fx-fill: -mfx-charcoal;
+}

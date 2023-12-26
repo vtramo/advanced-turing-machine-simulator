@@ -6,7 +6,7 @@ import com.github.vtramo.turingmachine.ui.*;
 import com.github.vtramo.turingmachine.ui.dialogs.TuringMachineHaltedDialogBuilder;
 import com.github.vtramo.turingmachine.ui.dialogs.TuringMachineHaltedStateDialog;
 import com.github.vtramo.turingmachine.ui.dialogs.TuringMachineImportDialog;
-import io.github.palexdev.materialfx.controls.MFXCircleToggleNode;
+import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXScrollPane;
 import io.github.palexdev.materialfx.controls.MFXSlider;
@@ -57,23 +57,23 @@ public class TuringMachineTabController {
     @FXML
     private MFXScrollPane tapesScrollPane;
     @FXML
-    private MFXCircleToggleNode playButton;
+    private MFXButton playButton;
     @FXML
-    private MFXCircleToggleNode pauseButton;
+    private MFXButton pauseButton;
     @FXML
-    private MFXCircleToggleNode resetButton;
+    private MFXButton resetButton;
     @FXML
-    private MFXCircleToggleNode stepBackButton;
+    private MFXButton stepBackButton;
     @FXML
-    private MFXCircleToggleNode stepButton;
+    private MFXButton stepButton;
     @FXML
     private Button loadInputButton;
     @FXML
     private TextField inputTextField;
     @FXML
-    private MFXCircleToggleNode importButton;
+    private MFXButton importButton;
     @FXML
-    private MFXCircleToggleNode saveButton;
+    private MFXButton saveButton;
     @FXML
     private MFXSlider speedSlider;
     @FXML
