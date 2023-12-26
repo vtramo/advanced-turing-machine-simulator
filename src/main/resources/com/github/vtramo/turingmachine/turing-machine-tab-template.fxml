@@ -433,13 +433,37 @@
                                         <MFXScrollPane vbarPolicy="NEVER" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.rowSpan="100" GridPane.valignment="CENTER">
                                             <ConfigurationListView fx:id="configurationsListView" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" prefHeight="145.0" prefWidth="438.0" />
                                         </MFXScrollPane>
-                                        <HBox alignment="CENTER" spacing="80" style="-fx-background-color: -mfx-charcoal" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="0">
-                                            <Label fx:id="stateLabel" alignment="CENTER" contentDisplay="CENTER" styleClass="standard-label-white" text="State: q1" textAlignment="CENTER" wrapText="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                                            </Label>
-                                            <Label fx:id="stepsLabel" alignment="CENTER" styleClass="standard-label-white" text="Steps: 76" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                                            </Label>
-                                            <Label fx:id="spaceLabel" alignment="CENTER" contentDisplay="CENTER" styleClass="standard-label-white" text="Space: 102" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                                            </Label>
+                                        <HBox alignment="CENTER" spacing="100" style="-fx-background-color: -mfx-charcoal" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="0">
+                                            <VBox alignment="CENTER" styleClass="standard-label-white" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                <Label fx:id="stateLabel" alignment="CENTER" contentDisplay="CENTER"
+                                                       styleClass="standard-label-white" text="State:" textAlignment="CENTER"
+                                                       wrapText="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                </Label>
+                                                <Label fx:id="stateLabelValue" alignment="CENTER" contentDisplay="CENTER"
+                                                       styleClass="standard-label-white" text="q1" textAlignment="CENTER"
+                                                       wrapText="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                </Label>
+                                            </VBox>
+                                            <VBox alignment="CENTER" styleClass="standard-label-white" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                <Label fx:id="stepsLabel" alignment="CENTER" contentDisplay="CENTER"
+                                                       styleClass="standard-label-white" text="Steps:" textAlignment="CENTER"
+                                                       wrapText="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                </Label>
+                                                <Label fx:id="stepsLabelValue" alignment="CENTER" contentDisplay="CENTER"
+                                                       styleClass="standard-label-white" text="q1" textAlignment="CENTER"
+                                                       wrapText="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                </Label>
+                                            </VBox>
+                                            <VBox alignment="CENTER" styleClass="standard-label-white" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                <Label fx:id="spaceLabel" alignment="CENTER" contentDisplay="CENTER"
+                                                       styleClass="standard-label-white" text="Space:" textAlignment="CENTER"
+                                                       wrapText="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                </Label>
+                                                <Label fx:id="spaceLabelValue" alignment="CENTER" contentDisplay="CENTER"
+                                                       styleClass="standard-label-white" text="q1" textAlignment="CENTER"
+                                                       wrapText="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                </Label>
+                                            </VBox>
                                         </HBox>
                                     </GridPane>
                                 </GridPane>

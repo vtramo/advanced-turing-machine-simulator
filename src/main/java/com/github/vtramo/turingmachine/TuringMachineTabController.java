@@ -45,11 +45,11 @@ public class TuringMachineTabController {
     @FXML
     private Tab turingMachineTab;
     @FXML
-    private Label stateLabel;
+    private Label stateLabelValue;
     @FXML
-    private Label stepsLabel;
+    private Label stepsLabelValue;
     @FXML
-    private Label spaceLabel;
+    private Label spaceLabelValue;
     @FXML
     private AnchorPane masterAnchorPane;
     @FXML
@@ -451,15 +451,15 @@ public class TuringMachineTabController {
     }
 
     private void setStateTextLabel(final String state) {
-        stateLabel.setText(STR."State: \{state}");
+        stateLabelValue.setText(state);
     }
 
     private void setStepsTextLabel(final int steps) {
-        stepsLabel.setText(STR."Steps: \{steps}");
+        stepsLabelValue.setText(String.valueOf(steps));
     }
 
     private void setSpaceTextLabel(final int space) {
-        spaceLabel.setText(STR."Space: \{space}");
+        spaceLabelValue.setText(String.valueOf(space));
     }
 
     private void reset() {

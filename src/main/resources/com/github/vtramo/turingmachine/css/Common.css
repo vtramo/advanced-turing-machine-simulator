@@ -65,3 +65,9 @@
 	-fx-border-color: -mfx-charcoal;
 	-fx-text-fill: white;
 }
+
+.standard-button .text {
+	-fx-text-fill: white;
+	-fx-font-size: 15;
+	-fx-font-family: "Source Code Pro Medium";
+}
