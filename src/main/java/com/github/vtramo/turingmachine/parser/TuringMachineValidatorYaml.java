@@ -5,7 +5,7 @@ import jakarta.json.stream.JsonParsingException;
 import lombok.Getter;
 import org.leadpony.justify.api.JsonValidationService;
 import org.leadpony.justify.api.Problem;
-import org.snakeyaml.engine.v2.exceptions.ScannerException;
+import org.snakeyaml.engine.v2.exceptions.MarkedYamlEngineException;
 
 import java.io.StringReader;
 import java.nio.file.Path;
@@ -34,18 +34,9 @@ public class TuringMachineValidatorYaml {
             while (jsonParser.hasNext()) {
                 jsonParser.next();
             }
-        } catch (final JsonParsingException e) {
-            // TODO: fix this downcast!!!
-            final ScannerException scannerException = (ScannerException) e.getCause();
-            scannerException.getContextMark()
-                .ifPresent(mark -> {
-                    final int line = mark.getLine();
-                    final int offset = mark.getColumn();
-                    final String succinctMessage = scannerException.getProblem();
-                    final String detailMessage = scannerException.getMessage();
-                    final ValidationMessage validationMessage = new ValidationMessage(line, offset, succinctMessage, detailMessage);
-                    syntaxValidationMessages.add(validationMessage);
-                });
+        } catch (final JsonParsingException parsingException) {
+            final List<ValidationMessage> validationMessages = handleParsingException(parsingException);
+            syntaxValidationMessages.addAll(validationMessages);
         }
 
         final List<ValidationMessage> schemaValidationMessages = problemHandler.getValidationMessages();
@@ -53,6 +44,21 @@ public class TuringMachineValidatorYaml {
 
         final boolean containsError = !schemaValidationMessages.isEmpty();
         return new ValidationResult(containsError, schemaValidationMessages);
+    }
+
+    private static List<ValidationMessage> handleParsingException(final JsonParsingException parsingException) {
+        final List<ValidationMessage> syntaxValidationMessages = new ArrayList<>();
+        final MarkedYamlEngineException scannerException = (MarkedYamlEngineException) parsingException.getCause();
+        scannerException.getContextMark()
+            .ifPresent(mark -> {
+                final int line = mark.getLine();
+                final int offset = mark.getColumn();
+                final String succinctMessage = scannerException.getProblem();
+                final String detailMessage = scannerException.getMessage();
+                final ValidationMessage validationMessage = new ValidationMessage(line, offset, succinctMessage, detailMessage);
+                syntaxValidationMessages.add(validationMessage);
+            });
+        return syntaxValidationMessages;
     }
 
     @Getter
