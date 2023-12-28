@@ -140,7 +140,6 @@ public class TuringMachineSaveAsDialog {
             .validProperty()
             .addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
-                    //                validationLabel.setVisible(false);
                     turingMachineDirectoryPathTextField.pseudoClassStateChanged(PseudoClass.getPseudoClass("invalid"), false);
                 }
             });
@@ -152,8 +151,6 @@ public class TuringMachineSaveAsDialog {
                     List<Constraint> constraints = turingMachineDirectoryPathTextField.validate();
                     if (!constraints.isEmpty()) {
                         turingMachineDirectoryPathTextField.pseudoClassStateChanged(INVALID_PSEUDO_CLASS, true);
-                        //                    validationLabel.setText(constraints.get(0).getMessage());
-                        //                    validationLabel.setVisible(true);
                     }
                 }
             });

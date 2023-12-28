@@ -27,7 +27,7 @@ public class TapeView extends Pane {
     private final CursorView cursorView;
 
     @Getter
-    private final List<CellView> tapeWithNoLimit;
+    private final List<CellView> limitlessTape;
     private int tapeLeftVisibleCellIndex;
     private int tapeRightVisibleCellIndex;
     private int tapeCurrentVisibleCellIndex;
@@ -35,7 +35,7 @@ public class TapeView extends Pane {
     private final ObservableList<Node> children = getChildren();
 
     public TapeView(final double width, final double height, final CellView... cells) {
-        tapeWithNoLimit = new ArrayList<>(cells.length);
+        limitlessTape = new ArrayList<>(cells.length);
         cellWindowSize = (int) (width / CELL_WIDTH);
         tapeLeftVisibleCellIndex = -(cellWindowSize / 2);
         tapeRightVisibleCellIndex = (cellWindowSize / 2) - 1;
@@ -62,7 +62,7 @@ public class TapeView extends Pane {
                 this.visibleCells.add(cell);
                 this.children.add(cell);
             }
-            tapeWithNoLimit.add(cell);
+            limitlessTape.add(cell);
         }
     }
 
@@ -95,7 +95,7 @@ public class TapeView extends Pane {
             totPaddingCellsAdded++;
             final CellView blank = new CellView(blank());
             addCellInLastPosition(blank, +2);
-            tapeWithNoLimit.add(blank);
+            limitlessTape.add(blank);
             lastCell = visibleCells.getLast();
             lastCellMaxX = lastCell.getBoundsInParent().getMaxX();
         }
@@ -136,12 +136,12 @@ public class TapeView extends Pane {
     }
 
     private CellView getNextRightCell() {
-        if (tapeRightVisibleCellIndex + 1 >= tapeWithNoLimit.size()) {
+        if (tapeRightVisibleCellIndex + 1 >= limitlessTape.size()) {
             final CellView blank = new CellView(blank());
-            tapeWithNoLimit.add(blank);
+            limitlessTape.add(blank);
             return blank;
         } else {
-            return tapeWithNoLimit.get(tapeRightVisibleCellIndex + 1).clone();
+            return limitlessTape.get(tapeRightVisibleCellIndex + 1).clone();
         }
     }
 
@@ -160,7 +160,7 @@ public class TapeView extends Pane {
     private CellView getNextLeftCell() {
         return tapeLeftVisibleCellIndex - 1 < 0
             ? new CellView(blank())
-            : tapeWithNoLimit
+            : limitlessTape
                 .get(tapeLeftVisibleCellIndex - 1)
                 .clone();
     }
@@ -210,7 +210,7 @@ public class TapeView extends Pane {
     public void write(final SymbolView symbol) {
         final CellView pointedCell = visibleCells.get(indexPointedCell);
         pointedCell.write(symbol);
-        tapeWithNoLimit.set(tapeCurrentVisibleCellIndex, pointedCell);
+        limitlessTape.set(tapeCurrentVisibleCellIndex, pointedCell);
     }
 
     public static TapeView buildInputTape(final String input, final double parentWidth, final double parentHeight) {
@@ -233,7 +233,7 @@ public class TapeView extends Pane {
     public static TapeView buildStaticTape(final String input, final double fromX) {
         final int width = ((input.length() + 2) * CELL_WIDTH);
         final TapeView staticTapeView = buildInputTape(input, width, 1080);
-        final List<CellView> allCellViews = staticTapeView.getTapeWithNoLimit();
+        final List<CellView> allCellViews = staticTapeView.getLimitlessTape();
         final ObservableList<Node> children = staticTapeView.getChildren();
         children.clear();
         children.addAll(allCellViews);

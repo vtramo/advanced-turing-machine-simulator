@@ -114,14 +114,25 @@ public class TuringMachineTabController {
 
     @SneakyThrows
     public void initialize() {
-        configureButtonOnMouseClickedListeners();
+        configureButtons();
         configureSpeedSlider();
-        configureMdtCompiler();
+        configureTuringMachineCompiler();
         configureTuringMachine();
         configureTuringMachineExamplesFilterCombo();
     }
 
-    private void configureButtonOnMouseClickedListeners() {
+    private void configureButtons() {
+        configurePlayButton();
+        configurePauseButton();
+        configureStepButton();
+        configureStepBackButton();
+        configureResetButton();
+        configureLoadInputButton();
+        configureImportButton();
+        configureSaveButton();
+    }
+
+    private void configurePlayButton() {
         playButton.setOnMouseClicked(__ -> {
             if (!isPlaying) {
                 stepBackButton.setDisable(true);
@@ -130,13 +141,17 @@ public class TuringMachineTabController {
                 play();
             }
         });
+    }
 
+    private void configurePauseButton() {
         pauseButton.setDisable(true);
         pauseButton.setOnMouseClicked(__ -> {
             isPlaying = false;
             pauseButton.setDisable(true);
         });
+    }
 
+    private void configureStepButton() {
         stepButton.setOnMouseClicked(__ -> {
             if (!stepInProgress) {
                 stepInProgress = true;
@@ -152,25 +167,35 @@ public class TuringMachineTabController {
                     });
             }
         });
+    }
 
+    private void configureStepBackButton() {
         stepBackButton.setDisable(true);
         stepBackButton.setOnMouseClicked(__ -> {
             if (!stepInProgress) {
                 stepInProgress = true;
                 stepBack()
-                        .thenAccept(___ -> stepInProgress = false);
+                    .thenAccept(___ -> stepInProgress = false);
             }
         });
+    }
 
+    private void configureResetButton() {
         resetButton.setOnMouseClicked(__ -> reset());
+    }
 
+    private void configureLoadInputButton() {
         loadInputButton.getStyleClass().removeFirst();
         loadInputButton.setOnMouseClicked(__ -> loadInputFromTextField());
+    }
 
+    private void configureImportButton() {
         importButton.setOnMouseClicked(__ -> {
             importTuringMachine();
         });
+    }
 
+    private void configureSaveButton() {
         Platform.runLater(() -> {
             configureTuringMachineArchiver();
 
@@ -186,6 +211,40 @@ public class TuringMachineTabController {
                 turingMachineArchiver.onTuringMachineTabCloseRequest(closeEvent, turingMachine.getName());
             });
         });
+    }
+
+    private void configureSpeedSlider() {
+        speedSlider.setValue(speedDelayMs - DELAY_BEFORE_NEXT_MOVE_MS + 0.1);
+        final DoubleProperty speedSliderDoubleProperty = speedSlider.valueProperty();
+        speedSlider.setRotate(180);
+        speedSliderDoubleProperty.addListener((__, ___, newValue)
+            -> speedDelayMs = newValue.longValue() - DELAY_BEFORE_NEXT_MOVE_MS + 0.1);
+    }
+
+    private void configureTuringMachineCompiler() {
+        turingMachineCompilerView.setCodeSupplier(() -> codeAreaYaml.getText());
+        turingMachineCompilerView.addOnSuccessListener(mdt -> {
+            this.turingMachine = mdt;
+            reset();
+        });
+    }
+
+    @SneakyThrows
+    private void configureTuringMachine() {
+        final TuringMachineParserYaml turingMachineParserYaml = new TuringMachineParserYaml();
+        turingMachine = turingMachineParserYaml.parse(turingMachineCode);
+        computation = turingMachine.startComputation(input);
+
+        codeAreaYaml.appendText(turingMachineCode);
+
+        createTapes();
+
+        observableConfigurations = FXCollections.observableArrayList(computation.getConfigurations());
+        configurationsListView.setItems(observableConfigurations);
+
+        setStepsTextLabel(0);
+        setSpaceTextLabel(computation.getSpace());
+        setStateTextLabel(turingMachine.getInitialState());
     }
 
     private void configureTuringMachineExamplesFilterCombo() {
@@ -247,40 +306,6 @@ public class TuringMachineTabController {
             .build();
     }
 
-    private void configureSpeedSlider() {
-        speedSlider.setValue(speedDelayMs - DELAY_BEFORE_NEXT_MOVE_MS + 0.1);
-        final DoubleProperty speedSliderDoubleProperty = speedSlider.valueProperty();
-        speedSlider.setRotate(180);
-        speedSliderDoubleProperty.addListener((__, ___, newValue)
-            -> speedDelayMs = newValue.longValue() - DELAY_BEFORE_NEXT_MOVE_MS + 0.1);
-    }
-
-    private void configureMdtCompiler() {
-        turingMachineCompilerView.setCodeSupplier(() -> codeAreaYaml.getText());
-        turingMachineCompilerView.addOnSuccessListener(mdt -> {
-            this.turingMachine = mdt;
-            reset();
-        });
-    }
-
-    @SneakyThrows
-    private void configureTuringMachine() {
-        final TuringMachineParserYaml turingMachineParserYaml = new TuringMachineParserYaml();
-        turingMachine = turingMachineParserYaml.parse(turingMachineCode);
-        computation = turingMachine.startComputation(input);
-
-        codeAreaYaml.appendText(turingMachineCode);
-
-        createTapes();
-
-        observableConfigurations = FXCollections.observableArrayList(computation.getConfigurations());
-        configurationsListView.setItems(observableConfigurations);
-
-        setStepsTextLabel(0);
-        setSpaceTextLabel(computation.getSpace());
-        setStateTextLabel(turingMachine.getInitialState());
-    }
-
     private void importTuringMachine() {
         final TuringMachineImporterYaml turingMachineImporterYaml = new TuringMachineImporterYaml(primaryStage, masterAnchorPane);
         final Optional<TuringMachineImportResult> optionalTuringMachineImportResult = turingMachineImporterYaml.importTuringMachine();
@@ -332,10 +357,6 @@ public class TuringMachineTabController {
 
         turingMachineCompilerView.clearLogs();
         reset();
-    }
-
-    private void importTuringMachine(final TuringMachineStoredProgram turingMachineStoredProgram) {
-
     }
 
     private void createTapes() {
