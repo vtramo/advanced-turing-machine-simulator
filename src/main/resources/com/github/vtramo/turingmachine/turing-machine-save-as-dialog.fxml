@@ -7,9 +7,9 @@
 <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
       prefHeight="200.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
       stylesheets="@css/Buttons.css,@css/TextFields.css">
-   <MFXTextField id="saveAsDialogTextField" floatingText="Filename" prefWidth="300.0" fx:id="turingMachineFilenameTextField"/>
+   <MFXTextField id="invalidableTextField" floatingText="Filename" prefWidth="300.0" fx:id="turingMachineFilenameTextField"/>
    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
-      <MFXTextField id="saveAsDialogTextField" floatingText="Directory" prefWidth="220.0" fx:id="turingMachineDirectoryPathTextField"/>
-      <MFXButton text="Change" fx:id="changeDirButton" id="changeDirButton"/>
+      <MFXTextField id="invalidableTextField" floatingText="Directory" prefWidth="220.0" fx:id="turingMachineDirectoryPathTextField"/>
+      <MFXButton text="Change" fx:id="changeDirButton" styleClass="standard-button"/>
    </HBox>
 </VBox>

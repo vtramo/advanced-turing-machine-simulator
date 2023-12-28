@@ -6,21 +6,22 @@ import com.github.vtramo.turingmachine.ui.*;
 import com.github.vtramo.turingmachine.ui.dialogs.TuringMachineHaltedDialogBuilder;
 import com.github.vtramo.turingmachine.ui.dialogs.TuringMachineHaltedStateDialog;
 import com.github.vtramo.turingmachine.ui.dialogs.TuringMachineImportDialog;
-import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
-import io.github.palexdev.materialfx.controls.MFXScrollPane;
-import io.github.palexdev.materialfx.controls.MFXSlider;
+import io.github.palexdev.materialfx.controls.*;
 import io.github.palexdev.materialfx.utils.StringUtils;
 import io.github.palexdev.materialfx.utils.others.FunctionalStringConverter;
+import io.github.palexdev.materialfx.validation.Constraint;
+import io.github.palexdev.materialfx.validation.MFXValidator;
+import io.github.palexdev.materialfx.validation.Severity;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -40,6 +41,9 @@ import static com.github.vtramo.turingmachine.ui.BlankSymbolView.blank;
 import static com.github.vtramo.turingmachine.ui.StartSymbolView.startSymbol;
 import static com.github.vtramo.turingmachine.ui.TuringMachineImporterYaml.TuringMachineImportResult;
 import static com.github.vtramo.turingmachine.ui.dialogs.TuringMachineImportDialog.OpenNewWindowDialogResult;
+import static io.github.palexdev.materialfx.validation.Validated.INVALID_PSEUDO_CLASS;
+import static javafx.beans.binding.Bindings.createBooleanBinding;
+import static javafx.beans.binding.Bindings.not;
 
 public class TuringMachineTabController {
     @FXML
@@ -69,7 +73,9 @@ public class TuringMachineTabController {
     @FXML
     private Button loadInputButton;
     @FXML
-    private TextField inputTextField;
+    private Label inputValidationLabel;
+    @FXML
+    private MFXTextField inputTextField;
     @FXML
     private MFXButton importButton;
     @FXML
@@ -185,8 +191,51 @@ public class TuringMachineTabController {
     }
 
     private void configureLoadInputButton() {
+        final ReadOnlyBooleanProperty isInputValid = configureInputTextField();
+        loadInputButton.disableProperty().bind(not(isInputValid));
         loadInputButton.getStyleClass().removeFirst();
         loadInputButton.setOnMouseClicked(__ -> loadInputFromTextField());
+    }
+
+    private ReadOnlyBooleanProperty configureInputTextField() {
+        final Constraint inputCannotContainAnAsterisk = Constraint.Builder.build()
+            .setSeverity(Severity.ERROR)
+            .setMessage("Input cannot contain an asterisk")
+            .setCondition(createBooleanBinding(
+                () -> !inputTextField.getText().contains("*"),
+                inputTextField.textProperty()
+            )).get();
+
+        final MFXValidator inputTextFieldValidator = inputTextField.getValidator();
+        inputTextFieldValidator.constraint(inputCannotContainAnAsterisk);
+        final ReadOnlyBooleanProperty isInputValid = inputTextFieldValidator.validProperty();
+
+        isInputValid.addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                inputTextField.pseudoClassStateChanged(PseudoClass.getPseudoClass("invalid"), false);
+                inputValidationLabel.setVisible(false);
+            }
+        });
+
+        inputTextField
+            .textProperty()
+            .addListener((observable, oldValue, newValue) -> {
+                if (!Objects.equals(oldValue, newValue)) {
+                    List<Constraint> constraints = inputTextField.validate();
+                    if (!constraints.isEmpty()) {
+                        inputTextField.pseudoClassStateChanged(INVALID_PSEUDO_CLASS, true);
+                        inputValidationLabel.setVisible(true);
+                        inputValidationLabel.setText(constraints.getFirst().getMessage());
+                    }
+                }
+            });
+
+        return isInputValid;
+    }
+
+    private void loadInputFromTextField() {
+        input = inputTextField.getText();
+        reset();
     }
 
     private void configureImportButton() {
@@ -500,10 +549,5 @@ public class TuringMachineTabController {
         setStateTextLabel(turingMachine.getInitialState());
         setStepsTextLabel(0);
         setSpaceTextLabel(computation.getSpace());
-    }
-
-    private void loadInputFromTextField() {
-        input = inputTextField.getText();
-        reset();
     }
 }

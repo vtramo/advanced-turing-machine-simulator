@@ -217,16 +217,23 @@
                                               minHeight="-Infinity" minWidth="-Infinity" GridPane.columnSpan="3"
                                               GridPane.halignment="CENTER" GridPane.rowIndex="2"
                                               GridPane.valignment="CENTER">
-                                            <MFXTextField id="inputTextField" fx:id="inputTextField"
-                                                          floatMode="DISABLED" minHeight="30.0" prefHeight="30.0"
-                                                          prefWidth="380.0" promptText="Input" HBox.hgrow="ALWAYS">
-                                                <HBox.margin>
-                                                    <Insets/>
-                                                </HBox.margin>
-                                                <font>
-                                                    <Font name="Source Code Pro Medium for Powerline" size="13.0"/>
-                                                </font>
-                                            </MFXTextField>
+                                            <VBox>
+                                                <MFXTextField id="invalidableTextField" fx:id="inputTextField"
+                                                              floatMode="DISABLED" minHeight="30.0" prefHeight="30.0"
+                                                              prefWidth="380.0" promptText="Input" HBox.hgrow="ALWAYS">
+                                                    <VBox.margin>
+                                                        <Insets top="17"/>
+                                                    </VBox.margin>
+                                                    <font>
+                                                        <Font name="Source Code Pro Medium for Powerline" size="13.0"/>
+                                                    </font>
+                                                </MFXTextField>
+                                                <Label fx:id="inputValidationLabel" text="" style="-fx-text-fill: red">
+                                                    <font>
+                                                        <Font name="Source Code Pro Medium for Powerline" size="13.0"/>
+                                                    </font>
+                                                </Label>
+                                            </VBox>
                                             <MFXButton fx:id="loadInputButton" minHeight="30.0" minWidth="100.0"
                                                        prefHeight="30.0" styleClass="standard-button" text="Load"
                                                        textAlignment="CENTER" GridPane.columnIndex="1"
