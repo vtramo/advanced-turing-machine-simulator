@@ -1,5 +1,6 @@
 package com.github.vtramo.turingmachine.parser;
 
+import com.github.vtramo.turingmachine.TuringMachineApplication;
 import jakarta.json.stream.JsonParser;
 import jakarta.json.stream.JsonParsingException;
 import lombok.Getter;
@@ -13,13 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TuringMachineValidatorYaml {
-    private static final Path pathJsonSchema = Path.of("src/main/resources/com/github/vtramo/turingmachine/turing-machine-schema.json");
+    private static final Path JSON_SCHEMA_PATH = Path.of("/turing-machine-schema.json");
     private final JsonValidationService service;
     private final org.leadpony.justify.api.JsonSchema schema;
 
     public TuringMachineValidatorYaml() {
         service = JsonValidationService.newInstance();
-        schema = service.readSchema(pathJsonSchema);
+        schema = service.readSchema(TuringMachineApplication.getResourceAsInputStream(JSON_SCHEMA_PATH.toString()));
     }
 
     public ValidationResult validate(final String mdtYamlDefinition) {

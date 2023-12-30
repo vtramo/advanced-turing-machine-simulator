@@ -6,6 +6,7 @@ import javafx.scene.image.Image;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.Objects;
 
@@ -16,15 +17,13 @@ public class LatexConfigurationImageGenerator {
         Symbol.BLANK, "\\sqcup "
     );
 
-    private static final String DESTINATION_PATH = "src/main/resources/formula.png";
-
     private final LatexFormulaPngGenerator latexFormulaPNGGenerator = new LatexFormulaPngGenerator();
 
     public Image generateLatexImage(final Configuration configuration) {
         final String latexFormula = buildLatexFormula(configuration);
-        latexFormulaPNGGenerator.generate(latexFormula, 22, DESTINATION_PATH);
+        final Path latexFormulaPngPath = latexFormulaPNGGenerator.generate(latexFormula, 22);
         try {
-            return new Image(new FileInputStream(DESTINATION_PATH));
+            return new Image(new FileInputStream(latexFormulaPngPath.toFile()));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -52,7 +51,7 @@ public class LatexConfigurationImageGenerator {
             } else if (Objects.equals(Symbol.BLANK.getSymbol(), symbol)) {
                 latexFormula.append(specialSymbolLatexFormula.get(Symbol.BLANK));
             } else if (Character.isAlphabetic(symbol)) {
-                latexFormula.append(STR."\\text{\{symbol}}");
+                latexFormula.append("\\text{").append(symbol).append("}");
             } else {
                 latexFormula.append(symbol);
             }

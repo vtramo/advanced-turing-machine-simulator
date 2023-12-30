@@ -11,7 +11,7 @@ import javafx.util.Pair;
 import java.util.Map;
 
 public class TuringMachineImportDialog {
-    public enum OpenNewWindowDialogResult { THIS_WINDOW, NEW_WINDOW, CANCEL;}
+    public enum OpenNewWindowDialogResult { THIS_WINDOW, NEW_WINDOW, CANCEL}
 
     private MFXStageDialog dialog;
     private MFXGenericDialog dialogContent;
@@ -28,7 +28,7 @@ public class TuringMachineImportDialog {
         final OpenNewWindowDialogResult[] openNewWindowDialogResult = new OpenNewWindowDialogResult[1];
         final MFXFontIcon infoIcon = new MFXFontIcon("fas-circle-question", 18);
         dialogContent.setHeaderIcon(infoIcon);
-        dialogContent.setContentText(STR."Where would you like to open the Turing machine '\{turingMachineName}'?");
+        dialogContent.setContentText("Where would you like to open the Turing machine '" + turingMachineName + "'?");
 
         dialogContent.addActions(Map.entry(new MFXButton("This window"), ___ -> {
             openNewWindowDialogResult[0] = OpenNewWindowDialogResult.THIS_WINDOW;

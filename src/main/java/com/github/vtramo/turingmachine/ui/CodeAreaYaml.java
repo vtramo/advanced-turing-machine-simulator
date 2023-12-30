@@ -41,7 +41,8 @@ public class CodeAreaYaml extends VirtualizedScrollPane<CodeArea> {
     private static final String KEYWORD_PATTERN = "\\S*:";
     private static final String STRING_PATTERN = "('.*')|(\".*\")|(\\|((\\n|.*)  +.*)+)";
     private static final String KEYWORD_GROUP = "KEYWORD";
-    private static final Pattern PATTERN = Pattern.compile(STR."(?<\{KEYWORD_GROUP}>\{KEYWORD_PATTERN})|(?<STRING>\{STRING_PATTERN})");
+    private static final Pattern PATTERN = Pattern.compile(String.format("(?<%s>%s)|(?<STRING>%s)",
+        KEYWORD_GROUP, KEYWORD_PATTERN, STRING_PATTERN));
 
     private final CodeArea codeArea;
     private final Popup popup = new Popup();

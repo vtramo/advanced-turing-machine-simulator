@@ -1,5 +1,6 @@
 package com.github.vtramo.turingmachine;
 
+import fr.brouillard.oss.cssfx.CSSFX;
 import io.github.palexdev.materialfx.theming.JavaFXThemes;
 import io.github.palexdev.materialfx.theming.MaterialFXStylesheets;
 import io.github.palexdev.materialfx.theming.UserAgentBuilder;
@@ -10,9 +11,9 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import fr.brouillard.oss.cssfx.CSSFX;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 public class TuringMachineApplication extends Application {
     @Override
@@ -46,5 +47,17 @@ public class TuringMachineApplication extends Application {
 
     public static void main(String[] args) {
         launch();
+    }
+
+    public static String readResourceAsString(final String resourcePath) {
+        try (final InputStream resourceAsStream = TuringMachineApplication.class.getResourceAsStream(resourcePath)) {
+            return new String(resourceAsStream.readAllBytes());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static InputStream getResourceAsInputStream(final String resourcePath) {
+        return TuringMachineApplication.class.getResourceAsStream(resourcePath);
     }
 }

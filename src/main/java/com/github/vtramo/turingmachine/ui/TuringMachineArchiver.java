@@ -99,7 +99,7 @@ public class TuringMachineArchiver {
     }
 
     private void addAsteriskToTuringMachineTabTitle() {
-        turingMachineTab.setText(STR."*\{turingMachineTab.getText()}");
+        turingMachineTab.setText("*" + turingMachineTab.getText());
     }
 
     private void removeAsteriskToTuringMachineTabTitle() {
@@ -188,7 +188,7 @@ public class TuringMachineArchiver {
         final MFXFontIcon warnIcon = new MFXFontIcon("fas-circle-exclamation", 18);
         dialogContent.setHeaderIcon(warnIcon);
         dialogContent.setHeaderText("Unsaved changes to the Turing code");
-        dialogContent.setContentText(STR."Save changes to Turing machine \"\{turingMachineName}\" before closing?");
+        dialogContent.setContentText("Save changes to Turing machine " + turingMachineName + " before closing?");
         dialogContent.getStyleClass().add("mfx-warn-dialog");
         return dialogContent;
     }

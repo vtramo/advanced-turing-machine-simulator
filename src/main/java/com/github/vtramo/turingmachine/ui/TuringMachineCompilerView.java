@@ -136,7 +136,7 @@ public class TuringMachineCompilerView extends GridPane {
     }
 
     private Text buildErrorMessage(final String errorMessage) {
-        final Text errorText = new Text(STR."[ERROR] \{errorMessage}");
+        final Text errorText = new Text("[ERROR] " + errorMessage);
         errorText.getStyleClass().add(TEXT_STYLE_CLASS);
         errorText.setFill(Color.RED);
         return errorText;
@@ -145,16 +145,16 @@ public class TuringMachineCompilerView extends GridPane {
     private Text buildSuccessfulCompilationLog(final TuringMachine turingMachine) {
         final String mdtName = turingMachine.getName();
         final int tapes = turingMachine.getTotalTapes();
-        final Text errorText = new Text(STR."[INFO] \{buildSuccessMessage(mdtName, tapes)}");
+        final Text errorText = new Text("[INFO] " + buildSuccessMessage(mdtName, tapes));
         errorText.getStyleClass().add(TEXT_STYLE_CLASS);
         errorText.setFill(Color.GREEN);
         return errorText;
     }
 
     private String buildSuccessMessage(final String mdtName, final int tapes) {
-        return STR. """
-        Turing's code contains no errors. The \{ tapes }-tape Turing machine named "\{ mdtName }" was successfully loaded. Enjoy!
-        """;
+        return String.format("""
+        Turing's code contains no errors. The %s-tape Turing machine named %s was successfully loaded. Enjoy!
+        """, tapes, mdtName);
     }
 
     public void clearLogs() {

@@ -15,12 +15,11 @@ import lombok.SneakyThrows;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import static com.github.vtramo.turingmachine.parser.TuringMachineYamlUtils.readTuringMachineYamlDefinition;
-
 public class HomeController {
-    private static final String MDT_TAB_TEMPLATE_FXML = "turing-machine-tab-template.fxml";
-    private static final Path MDT_HELLO_WORLD_PATH = Path.of("src/main/resources/turing-machine-hello-world.yaml");
-    private static final String MDT_HELLO_WORLD_NAME = "Hello World";
+    private static final String TM_TAB_TEMPLATE_FXML = "turing-machine-tab-template.fxml";
+    private static final Path TM_HELLO_WORLD_PATH = Path.of("/turing-machine-hello-world.yaml");
+
+    private static final String TM_HELLO_WORLD_NAME = "Hello World";
 
     @FXML
     private TabPane tabPane;
@@ -51,18 +50,17 @@ public class HomeController {
 
     private String buildNextTuringMachineTabTitle() {
         final ObservableList<Tab> tabs = tabPane.getTabs();
-        return STR."Turing Machine \{tabs.size()}";
+        return "Turing Machine " + tabs.size();
     }
 
     @SneakyThrows
     public Tab createTuringMachineTab(final String title, final Path turingMachineYamlProgramPath) {
-        final String turingMachineYamlProgram = readTuringMachineYamlDefinition(turingMachineYamlProgramPath);
-        return createTuringMachineTab(title, turingMachineYamlProgram, turingMachineYamlProgramPath);
+        return null;
     }
 
     private Tab createHelloWorldTuringMachineTab() {
-        final String turingMachineYamlProgram = readTuringMachineYamlDefinition(MDT_HELLO_WORLD_PATH);
-        return createTuringMachineTab(MDT_HELLO_WORLD_NAME, turingMachineYamlProgram);
+        final String turingMachineYamlProgram = TuringMachineApplication.readResourceAsString(TM_HELLO_WORLD_PATH.toString());
+        return createTuringMachineTab(TM_HELLO_WORLD_NAME, turingMachineYamlProgram);
     }
 
     private Tab createTuringMachineTab(final String title, final String turingMachineYamlProgram) {
@@ -71,7 +69,7 @@ public class HomeController {
 
     public Tab createTuringMachineTab(final String title, final String turingMachineYamlProgram, final Path turingMachineYamlProgramPath) {
         try {
-            final FXMLLoader fxmlLoader = new FXMLLoader(TuringMachineApplication.class.getResource(MDT_TAB_TEMPLATE_FXML));
+            final FXMLLoader fxmlLoader = new FXMLLoader(TuringMachineApplication.class.getResource(TM_TAB_TEMPLATE_FXML));
             final TuringMachineTabController turingMachineTabController = new TuringMachineTabController(
                 this, primaryStage,
                 turingMachineYamlProgram, turingMachineYamlProgramPath

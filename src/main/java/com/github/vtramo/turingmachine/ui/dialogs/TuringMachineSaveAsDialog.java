@@ -194,10 +194,10 @@ public class TuringMachineSaveAsDialog {
     private void showTuringMachineSavedNotification() {
         initMFXNotificationSystem();
         final TuringMachineSavedNotification notification = new TuringMachineSavedNotification();
-        notification.setContentText(STR."""
-        Your Turing Machine has been stored at the following location: \{getTuringMachineCodeAbsolutePath()}. \
+        notification.setContentText(String.format("""
+        Your Turing Machine has been stored at the following location: %s. \
         You can now proceed with your next operations or revisit your machine anytime!
-        """);
+        """, getTuringMachineCodeAbsolutePath()));
         MFXNotificationSystem.instance()
             .setPosition(NotificationPos.TOP_LEFT)
             .publish(notification);
@@ -221,13 +221,13 @@ public class TuringMachineSaveAsDialog {
     }
 
     private Path getTuringMachineCodeAbsolutePath() {
-        return Path.of(STR."\{turingMachineDirectoryPathTextField.getText()}/\{getTuringMachineCodeFilename()}");
+        return Path.of(turingMachineDirectoryPathTextField.getText() + "/" + getTuringMachineCodeFilename());
     }
 
     private String getTuringMachineCodeFilename() {
         String turingMachineCodeFilename = turingMachineFilenameTextField.getText();
         if (!turingMachineCodeFilename.endsWith(".yaml") && !turingMachineCodeFilename.endsWith(".yml")) {
-            turingMachineCodeFilename = STR."\{turingMachineCodeFilename}.yaml";
+            turingMachineCodeFilename = turingMachineCodeFilename + ".yaml";
         }
         return turingMachineCodeFilename;
     }

@@ -150,7 +150,6 @@
               <version>${lombok.version}</version>
             </path>
           </annotationProcessorPaths>
-            <compilerArgs>--enable-preview</compilerArgs>
         </configuration>
       </plugin>
       <plugin>
@@ -173,6 +172,42 @@
           </execution>
         </executions>
       </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-dependencies</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>
+                ${project.build.directory}/libs
+              </outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <classpathPrefix>libs/</classpathPrefix>
+              <mainClass>
+                com.github.vtramo.turingmachine.TuringMachineApplication
+              </mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+
+
     </plugins>
   </build>
 </project>
