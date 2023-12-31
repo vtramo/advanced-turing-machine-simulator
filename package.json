@@ -10,7 +10,7 @@
         "jdk": false,
         "javaVersion": "21",
         "documentTypes": [],
-        "jar": "target/turing-machine-simulator-1.0.0-alpha.jar",
+        "jar": "target/turing-machine-simulator-1.0.0-alpha-2.jar",
         "javafx": true,
         "title": "Turing machine simulator"
     },
