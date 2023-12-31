@@ -5,9 +5,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.github.vtramo</groupId>
-  <artifactId>advanced-turing-machine-simulator</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <name>advanced-turing-machine-emulator</name>
+  <artifactId>turing-machine-simulator</artifactId>
+  <version>1.0.0-alpha-1</version>
+  <name>turing-machine-emulator</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
