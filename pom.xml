@@ -6,7 +6,7 @@
 
   <groupId>com.github.vtramo</groupId>
   <artifactId>turing-machine-simulator</artifactId>
-  <version>1.0.0-alpha-1</version>
+  <version>1.0.0-alpha-2</version>
   <name>turing-machine-emulator</name>
 
   <properties>
